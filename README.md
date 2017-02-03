@@ -1,1 +1,1 @@
-# dark-sky-new-tab
+This is a new tab chrome extension that uses Dark Sky's weather data
