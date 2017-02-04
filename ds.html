@@ -5,15 +5,19 @@
 		<link href="ds.css" rel="stylesheet">
 	</head>
 	<body>
+
 		<img src="/pbds.png">
  		<iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src=""></iframe>
- 		<div id="loading" style="text-align: center"><img src="darksky.gif"><p id="error">Loading your location . . . </p></div>
+ 		<div id="loading" style="text-align:center"><img src="darksky.gif"><p id="error">Loading your location . . . </p></div>
  		<div id="loc">Get Your Location</div>
- 		<div style="text-align: center">
+ 		<input id="locSearch" placeholder="Search for a city, zipcode, address ...">
+ 		
+ 		<div style="text-align:center">
 	 		<button id="saveLoc">SAVE THIS LOCATION</button>
 	 		<button id="clearLS"">DELETE SAVED LOCATIONS</button>
 	 		<button id="clearSS">CLEAR RECENT SEARCHES</button>
 	 	</div>
+
 		<table id="savtable">
 		  <thead>
 		    <tr>
@@ -37,5 +41,6 @@
 <!-- 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsj94cAP9WAyLVZs1CCYt79cYGCAkQge4&libraries=places&callback=initAutocomplete" async defer></script>
  		<script id="mapsAPI" type="text/javascript" ></script> -->
  		<script type="text/javascript" src="/ds.js"></script>
+
 	</body>
 </html>

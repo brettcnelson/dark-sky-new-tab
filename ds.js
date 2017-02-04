@@ -34,4 +34,4 @@ var iframe = document.getElementById('forecast_embed')
 
 
 
-// 'http://forecast.io/embed/#lat=55.6164&lon=12.0555&name=test'
+iframe.src = 'http://forecast.io/embed/#lat=42.667869&lon=-70.840479&name=test home'
