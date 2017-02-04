@@ -1,20 +1,8 @@
 {
 	"manifest_version": 2,
-	"name": "Dark Sky New Tab",
-	"description": "Shows the Dark Sky forecast in any location",
+	"name": "New Tab Test",
 	"version": "1.0",
-	"chrome_url_overrides": {
-		"newtab": "ds.html"
-	},
-	"content_scripts": [
-		{
-		"js": ["content.js"],
-		"matches": ["https://darksky.net/*"]
-		}
-	],
-	"permissions": [
-		"tabs",
-		"https://maps.googleapis.com/*"
-	],
-	"content_security_policy": "script-src 'self' https://maps.googleapis.com/maps/api/*; object-src 'self'"
+		"chrome_url_overrides": {
+		"newtab": "ntt.html"
+	}
 }
