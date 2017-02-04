@@ -3,6 +3,6 @@
 	"name": "New Tab Test",
 	"version": "1.0",
 		"chrome_url_overrides": {
-		"newtab": "ntt.html"
+		"newtab": "ds.html"
 	}
 }
