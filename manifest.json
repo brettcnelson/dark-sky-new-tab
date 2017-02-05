@@ -1,6 +1,6 @@
 {
 	"manifest_version": 2,
-	"name": "New Tab Test",
+	"name": "Dark Sky New Tab",
 	"description": "location-based and searchable weather widget using Dark Sky data",
 	"version": "1.0",
 		"chrome_url_overrides": {
@@ -8,7 +8,7 @@
 	},
 	"icons": {"128": "icon.png"},
 	"permissions": [
-		// "geolocation"
+		"geolocation"
 	],
-	"content_security_policy": "script-src 'self' https://maps.googleapis.com/*; object-src 'self'"
+	"content_security_policy": "script-src 'self' 'unsafe-eval' https://maps.googleapis.com; object-src 'self'"
 }

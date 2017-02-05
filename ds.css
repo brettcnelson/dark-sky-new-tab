@@ -1,17 +1,35 @@
+* {
+	background-color: #bfbfbf;
+}
+
+#pic {
+	opacity: .67;
+	margin:auto;
+	width: 25%;
+	display:block;
+}
+
 #locSearch {
   padding: 10px;
   border: solid 1px #fff;
   box-shadow: inset 1px 1px 2px 0 #707070;
   transition: box-shadow 0.3s;
-  background-color: black;
+  background-color: #2F2F2F;
   color: white;
   width: 50%;
   display:block;
   margin: auto;
 }
+
+#saveLoc {
+	background-color: white;
+	color:#2F2F2F;
+}
+
 #saveLoc:hover {
-	background-color: black;
-	color: white
+	background-color: #2F2F2F;
+	color: white;
+	cursor:cell;
 }
 
 #directions, #clear {
@@ -28,8 +46,21 @@
 	margin:auto;
 }
 
+#loc {
+  padding: 10px;
+  border: solid 1px #fff;
+  box-shadow: inset 1px 1px 2px 0 #707070;
+  transition: box-shadow 0.3s;
+  background-color: #2F2F2F;
+  color: white;
+  width: 25%;
+  display:block;
+  margin: auto;
+  text-align: center
+}
+
 #loc:hover {
-	cursor: crosshair;
+	cursor: cell;
 	background-color: white;
 	color: black;
 }
@@ -46,8 +77,7 @@ table {
 	color: white;
 }	
 
-th, 
-#loc {
+th {
 	text-align: center;
 	background: black;
 	border-left: 1px solid #555;
