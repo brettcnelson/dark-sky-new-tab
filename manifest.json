@@ -6,7 +6,7 @@
 		"chrome_url_overrides": {
 		"newtab": "ds.html"
 	},
-	"icons": {"128": "icon.png"},
+	"icons": {"128": "ds.png"},
 	"permissions": [
 		"geolocation"
 	],

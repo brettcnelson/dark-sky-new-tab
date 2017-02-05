@@ -1,12 +1,25 @@
-* {
+/** {
 	background-color: #bfbfbf;
+}*/
+
+
+.grayscale {
+	/*width:100px;*/
+	/*height:100px;*/
 }
 
 #pic {
-	opacity: .67;
-	margin:auto;
-	width: 25%;
+	/*opacity: .67;*/
+	margin:5px;
+	padding:5px;
+	width: 20%;
 	display:block;
+	left:0px;
+}
+
+#loading {
+	width:100%;
+	text-align: center;
 }
 
 #locSearch {
@@ -14,19 +27,21 @@
   border: solid 1px #fff;
   box-shadow: inset 1px 1px 2px 0 #707070;
   transition: box-shadow 0.3s;
-  background-color: #2F2F2F;
+  /*background-color: #2F2F2F;*/
+  background-color: black;
   color: white;
   width: 50%;
   display:block;
   margin: auto;
 }
 
-#saveLoc {
+/*#saveLoc {
 	background-color: white;
 	color:#2F2F2F;
-}
+	right:20px;
+}*/
 
-#saveLoc:hover {
+#saveLocbtn:hover {
 	background-color: #2F2F2F;
 	color: white;
 	cursor:cell;
@@ -51,8 +66,9 @@
   border: solid 1px #fff;
   box-shadow: inset 1px 1px 2px 0 #707070;
   transition: box-shadow 0.3s;
-  background-color: #2F2F2F;
-  color: white;
+  /*background-color: #2F2F2F;*/
+  background-color: white;
+  color: black;
   width: 25%;
   display:block;
   margin: auto;

@@ -8,19 +8,19 @@
 
 		<img id="pic" src="/pbds.png">
  		<iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src=""></iframe>
- 		<div id="loading" style="text-align:center"><img src="darksky.gif"><p id="error">Loading your location . . . </p></div>
- 		<div id="loc">Get Your Location</div>
- 		<input id="locSearch" placeholder="Search for a city, zipcode, address ...">
- 		
- 		<div style="text-align:center">
-	 		<button id="saveLoc">SAVE THIS LOCATION</button>
+ 		<div id="loading"><img src="darksky.gif"><p id="error">Loading your location . . . </p></div>
+ 		<div id="saveLoc">
+	 		<button id="saveLocbtn">SAVE THIS LOCATION</button>
 	 	</div>
+ 		<input id="locSearch" placeholder="Search for a city, zipcode, address ...">
+ 		<div id="loc">Get Your Location</div>
+ 		
 
 		<table id="savtable">
 		  <thead>
 		    <tr>
 		      <th>Saved Locations
-		      	<div id="directions">doubleclick row to remove item or <button id="remove">remove all</button>
+		      	<div id="directions">double-click row to remove item or <button id="remove">remove all</button>
 		      	</div>
 		     	</th>
 		    </tr>
@@ -43,6 +43,7 @@
 		<script type="text/javascript" id="info" async defer></script>
 		<script type="text/javascript" src="info.js"></script>
  		<script type="text/javascript" src="/ds.js"></script>
+		<!-- <script type="text/javascript" src="images.js"></script> -->
 
 	</body>
 </html>

@@ -3,19 +3,24 @@ document.getElementById('loc').onclick = function () {
 }
 
 document.getElementById('saveLoc').onclick = function () {
-	console.log('saved')
+	var name = iframe.src.split('&name=')[1]
+	if (name) {
+		localStorage.setItem(name, iframe.src)
+		popList()
+	}
+	else {
+		alert('there is no current location to save')
+	}	
 }
 
 document.getElementById('remove').onclick = function () {
-	console.log('lsbefore', localStorage)
 	localStorage.clear()
-	console.log('lsafter', localStorage)
+	popList()
 }
 
 document.getElementById('clear').onclick = function () {
-	console.log('ssbefore', sessionStorage)
 	sessionStorage.clear()
-	console.log('ssafter', sessionStorage)
+	popList()
 }
 
 var iframe = document.getElementById('forecast_embed')
@@ -24,9 +29,11 @@ document.getElementById('loading').style.display = 'none'
 
 document.getElementById('locSearch').focus()
 
-var photo = document.getElementById('photo')
+var photoGall = document.getElementById('photo')
 
-photo.style.display = 'none'
+photoGall.style.display = 'none'
+
+popList()
 
 if (sessionStorage.pending) {
 	if (sessionStorage.geocode) {
@@ -59,7 +66,7 @@ function getLocation(force) {
 				document.getElementById('loading').style.display = 'none'
 				iframe.style.display = 'inline'
 				var locName = results[0].formatted_address
-				iframe.src = "http://forecast.io/embed/#lat=" + locLat.toFixed(4) + "&lon=" + locLon.toFixed(4) + "&name=" + locName
+				iframe.src = "https://forecast.io/embed/#lat=" + locLat.toFixed(4) + "&lon=" + locLon.toFixed(4) + "&name=" + locName
 				sessionStorage.setItem(locName, iframe.src)
 				popList()
 				if (force === true) {
@@ -78,19 +85,59 @@ function getLocation(force) {
 }
 
 function changeSrc() {
-
-	console.log(autocomplete.getPlace())
 	var locName = document.getElementById('locSearch').value
 	locLat = autocomplete.getPlace().geometry.location.lat().toFixed(4)
 	locLon = autocomplete.getPlace().geometry.location.lng().toFixed(4)
-	
-	sessionStorage.pending = "http://forecast.io/embed/#lat=" + locLat + "&lon=" + locLon + "&name=" + locName
-
+	sessionStorage.pending = "https://forecast.io/embed/#lat=" + locLat + "&lon=" + locLon + "&name=" + locName
 	sessionStorage.setItem(locName, iframe.src)
-
-	sessionStorage.results = JSON.stringify(autocomplete.getPlace())
-
-	console.log(JSON.parse(sessionStorage.results))
-
+	// sessionStorage.results = JSON.stringify(autocomplete.getPlace())
+	var photos = autocomplete.getPlace().photos
+	var photourls = photos.map(function(p) {
+		return p.getUrl({'maxWidth': 150, 'maxHeight': 150})
+	})
+	sessionStorage.name = autocomplete.getPlace().name
+	sessionStorage.urls = JSON.stringify(photourls)
 	location.reload()
+}
+
+function popList() {
+
+	function pop(id1, id2, storage) {
+		var table = document.getElementById(id1)
+		while (table.rows.length) {
+			table.deleteRow(0)
+		}
+		for (var key in storage) {
+			if (key !== 'pending' && key !== 'geocode' && key !== 'name' && key !== 'urls') {
+				var newRow = table.insertRow(table.rows.length)
+				var newCell = newRow.insertCell(0)
+				var newText = document.createTextNode(key)
+				newCell.appendChild(newText)
+				newCell.classList.add('places')
+			}
+		}
+		var disp = document.getElementById(id2).style.display
+		table.rows.length ? disp = '' : disp = 'none'
+	}
+
+	pop('recent', 'rectable', sessionStorage)
+	pop('saved', 'savtable', localStorage)
+
+	var places = document.querySelectorAll('.places')
+	for (var i = 0 ; i < places.length ; i++) {
+		var el = places[i]
+		var search = document.getElementById('locSearch')
+		el.ondblclick = function() {
+			if (localStorage[this.innerHTML]) {
+				search.value = ''
+				search.blur()
+				localStorage.removeItem(this.innerHTML)
+				popList()
+			}
+		}
+		el.onclick = function() {
+			search.value = this.innerHTML
+			search.focus()
+		}
+	}
 }
