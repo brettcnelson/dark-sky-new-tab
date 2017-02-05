@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "Dark Sky Weather New Tab",
 	"description": "location-based and searchable weather widget using Dark Sky data",
-	"version": "1.0",
+	"version": "1.0.0.1",
 		"chrome_url_overrides": {
 		"newtab": "ds.html"
 	},
