@@ -91,12 +91,14 @@ function changeSrc() {
 	sessionStorage.pending = "https://forecast.io/embed/#lat=" + locLat + "&lon=" + locLon + "&name=" + locName
 	sessionStorage.setItem(locName, iframe.src)
 	// sessionStorage.results = JSON.stringify(autocomplete.getPlace())
-	var photos = autocomplete.getPlace().photos
-	var photourls = photos.map(function(p) {
-		return p.getUrl({'maxWidth': 150, 'maxHeight': 150})
-	})
+	if (autocomplete.getPlace().photos) {
+		var photos = autocomplete.getPlace().photos
+		var photourls = photos.map(function(p) {
+			return p.getUrl({'maxWidth': 150, 'maxHeight': 150})
+		})
+		sessionStorage.urls = JSON.stringify(photourls)
+	}
 	sessionStorage.name = autocomplete.getPlace().name
-	sessionStorage.urls = JSON.stringify(photourls)
 	location.reload()
 }
 
