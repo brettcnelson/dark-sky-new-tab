@@ -14,14 +14,15 @@
  		
  		<div style="text-align:center">
 	 		<button id="saveLoc">SAVE THIS LOCATION</button>
-	 		<button id="clearLS"">DELETE SAVED LOCATIONS</button>
-	 		<button id="clearSS">CLEAR RECENT SEARCHES</button>
 	 	</div>
 
 		<table id="savtable">
 		  <thead>
 		    <tr>
-		      <th>Saved Locations</th>
+		      <th>Saved Locations
+		      	<div id="directions">doubleclick row to remove item or <button id="remove">remove all</button>
+		      	</div>
+		     	</th>
 		    </tr>
 		  </thead>
 		  <tbody id="saved">
@@ -31,15 +32,14 @@
 		<table id="rectable">
 		  <thead>
 		    <tr>
-		      <th>Recent Searches</th>
+		      <th>Recent Searches<button id="clear">clear recent searches</button></th>
 		    </tr>
 		  </thead>
 		  <tbody id="recent">
 		  </tbody>
 		</table>
 		
-<!-- 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsj94cAP9WAyLVZs1CCYt79cYGCAkQge4&libraries=places&callback=initAutocomplete" async defer></script>
- 		<script id="mapsAPI" type="text/javascript" ></script> -->
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsj94cAP9WAyLVZs1CCYt79cYGCAkQge4&libraries=places&callback=initAutocomplete" async defer></script>
  		<script type="text/javascript" src="/ds.js"></script>
 
 	</body>

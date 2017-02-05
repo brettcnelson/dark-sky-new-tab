@@ -9,6 +9,24 @@
   display:block;
   margin: auto;
 }
+#saveLoc:hover {
+	background-color: black;
+	color: white
+}
+
+#directions, #clear {
+	display: none;
+}
+
+#savtable:hover #directions {
+	display: block;
+}
+
+#rectable:hover #clear {
+	display: block;
+	text-align: center;
+	margin:auto;
+}
 
 #loc:hover {
 	cursor: crosshair;
