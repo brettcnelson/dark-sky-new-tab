@@ -1,6 +1,6 @@
 {
 	"manifest_version": 2,
-	"name": "Dark Sky New Tab",
+	"name": "Dark Sky Weather New Tab",
 	"description": "location-based and searchable weather widget using Dark Sky data",
 	"version": "1.0",
 		"chrome_url_overrides": {
