@@ -118,8 +118,8 @@ function popList() {
 				newCell.classList.add('places')
 			}
 		}
-		var disp = document.getElementById(id2).style.display
-		table.rows.length ? disp = '' : disp = 'none'
+		var disp = document.getElementById(id2)
+		table.rows.length ? disp.style.display = '' : disp.style.display = 'none'
 	}
 
 	pop('recent', 'rectable', sessionStorage)
