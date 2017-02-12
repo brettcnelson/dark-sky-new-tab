@@ -4,8 +4,14 @@
 
 
 .grayscale {
-	/*width:100px;*/
-	/*height:100px;*/
+/*	width:100px;
+	height:100px;
+	-webkit-filter: grayscale(100%);
+  -webkit-filter: grayscale(1);
+  filter: grayscale(100%);
+ 
+  filter: url('../img/gray.svg#grayscale');
+  filter: gray;*/
 }
 
 #pic {
@@ -13,8 +19,13 @@
 	margin:5px;
 	padding:5px;
 	width: 20%;
+	display:inline;
+}
+
+#glogo {
+	margin:auto;
 	display:block;
-	left:0px;
+	width:9%;
 }
 
 #loading {

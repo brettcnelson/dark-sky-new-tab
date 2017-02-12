@@ -90,7 +90,7 @@ function changeSrc() {
 	locLon = autocomplete.getPlace().geometry.location.lng().toFixed(4)
 	sessionStorage.pending = "https://forecast.io/embed/#lat=" + locLat + "&lon=" + locLon + "&name=" + locName
 	sessionStorage.setItem(locName, iframe.src)
-	// sessionStorage.results = JSON.stringify(autocomplete.getPlace())
+	sessionStorage.results = JSON.stringify(autocomplete.getPlace())
 	if (autocomplete.getPlace().photos) {
 		var photos = autocomplete.getPlace().photos
 		var photourls = photos.map(function(p) {
@@ -110,7 +110,7 @@ function popList() {
 			table.deleteRow(0)
 		}
 		for (var key in storage) {
-			if (key !== 'pending' && key !== 'geocode' && key !== 'name' && key !== 'urls') {
+			if (key !== 'pending' && key !== 'geocode' && key !== 'name' && key !== 'urls' && key !== 'results') {
 				var newRow = table.insertRow(table.rows.length)
 				var newCell = newRow.insertCell(0)
 				var newText = document.createTextNode(key)
@@ -140,6 +140,23 @@ function popList() {
 		el.onclick = function() {
 			search.value = this.innerHTML
 			search.focus()
+			var keyboardEvent = document.createEvent("KeyboardEvent");
+var initMethod = typeof keyboardEvent.initKeyboardEvent !== 'undefined' ? "initKeyboardEvent" : "initKeyEvent";
+
+
+keyboardEvent[initMethod](
+                   "keydown", // event type : keydown, keyup, keypress
+                    true, // bubbles
+                    true, // cancelable
+                    window, // viewArg: should be window
+                    false, // ctrlKeyArg
+                    false, // altKeyArg
+                    false, // shiftKeyArg
+                    false, // metaKeyArg
+                    40, // keyCodeArg : unsigned long the virtual key code, else 0
+                    0 // charCodeArgs : unsigned long the Unicode character associated with the depressed key, else 0
+);
+document.dispatchEvent(keyboardEvent);
 		}
 	}
 }
