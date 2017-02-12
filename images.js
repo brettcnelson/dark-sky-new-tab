@@ -1,19 +1,38 @@
-if (sessionStorage.urls) {
+var photoGall = document.getElementById('photo')
+photoGall.style.display = 'none'
+
+	// no more .urls - everything is in *Place
+
+if (sessionStorage['*results']) {
+	var results = JSON.parse(sessionStorage['*results'])
+	console.log('photos', results.photos)
 	photoGall.style.display = ''
 	var p = document.createElement('P')
-	var t = document.createTextNode(sessionStorage.name)
+	var name = results.name
+	var t = document.createTextNode(name)
 	p.appendChild(t)
 	photoGall.appendChild(p)
-	JSON.parse(sessionStorage.urls).forEach(function(u) {
-		var el = document.createElement('img')
-		el.src = u
-		el.classList.add('grayscale')
+	results.photos.forEach(function(p) {
+		var a = p.html_attributions[0]
+		var el = document.createElement('span')
+		el.innerHTML = a
 		photoGall.appendChild(el)
+
+		// var el = document.createElement('a')
+
 	})
-	// console.log('grayscale')
-	sessionStorage.removeItem('urls')
-	sessionStorage.removeItem('name')
 }
+
+
+	// if (autocomplete.getPlace().photos) {
+	// 	var photos = autocomplete.getPlace().photos
+	// 	var photourls = photos.map(function(p) {
+	// 		return p.getUrl({'maxWidth': 150, 'maxHeight': 150})
+	// 	})
+	// 	sessionStorage.urls = JSON.stringify(photourls)
+	// }
+	// sessionStorage.name = autocomplete.getPlace().name
+	// location.reload()
 
 // function grays() {
 // 	var grays = document.querySelectorAll('.grayscale')

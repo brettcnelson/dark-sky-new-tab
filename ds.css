@@ -2,6 +2,9 @@
 	background-color: #bfbfbf;
 }*/
 
+html body {
+	height: 100%;
+}
 
 .grayscale {
 /*	width:100px;
@@ -19,18 +22,24 @@
 	margin:5px;
 	padding:5px;
 	width: 20%;
-	display:inline;
+	display:block;
 }
 
 #glogo {
-	margin:auto;
+	/*margin:auto;*/
 	display:block;
-	width:9%;
+	width:15%;
+}
+
+#dsfoot {
+	display:block;
+	width:20%;
 }
 
 #loading {
 	width:100%;
 	text-align: center;
+	height: 100%;
 }
 
 #locSearch {
@@ -52,7 +61,7 @@
 	right:20px;
 }*/
 
-#saveLocbtn:hover {
+#saveLocbtn:hover, #default:hover{
 	background-color: #2F2F2F;
 	color: white;
 	cursor:cell;
@@ -150,4 +159,39 @@ tbody:hover td {
 tbody:hover tr:hover td {
 	color: white;
 	text-shadow: 0 1px 0 #fff;
+}
+
+/*footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}*/
+
+.signal {
+    border: 5px solid #333;
+    border-radius: 30px;
+    height: 30px;
+    left: 50%;
+    margin: -15px 0 0 -15px;
+    opacity: 0;
+    position: absolute;
+    top: 5%;
+    width: 30px;
+ 
+    animation: pulsate .75s ease-out;
+    animation-iteration-count: infinite;
+}
+
+@keyframes pulsate {
+    0% {
+      transform: scale(.1);
+      opacity: 0.0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
 }

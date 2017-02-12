@@ -6,16 +6,21 @@
 	</head>
 	<body>
 
-		<img id="pic" src="pbds.png">
- 		<iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src=""></iframe>
- 		<div id="loading"><img src="darksky.gif"><p id="error">Loading your location . . . </p></div>
- 		<div id="saveLoc">
-	 		<button id="saveLocbtn">SAVE THIS LOCATION</button>
-	 	</div>
- 		<div><input id="locSearch" placeholder="Search for a city, zipcode, address ..."></div>
- 		<div><img id="glogo" src="powered_by_google_on_white.png"></div>
- 		<div id="loc">Get Your Location</div>
+		<a href="https://darksky.net/" target="_blank"><img id="pic" src="pbds.png"></a><div></div>
+ 		<iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src=""></iframe></div>
+ 		<div id="loading">
+	 		<div class="signal"></div>
+	 		<p id="error">Loading your location . . . </p>
+	 		 		<!-- <div height="245" width="100%"><img src="darksky.gif"><p id="error">Loading your location . . . </p></div> -->
+ 		</div>
+
  		
+ 		<div><input id="locSearch" placeholder="Search for a city, zipcode, address ..."></div>
+ 		<div id="loc">Get Your Location</div>
+ 		<div id="saveLoc">
+	 		<button id="saveLocbtn">save this location</button>
+	 		<!-- <button id="default">set as default</button> -->
+	 	</div>
 
 		<table id="savtable">
 		  <thead>
@@ -39,13 +44,22 @@
 		  <tbody id="recent">
 		  </tbody>
 		</table>
-		<div id="photo"></div>
-		<p style="font-size:50%">*Note: Also powered by me. Brett.</p>
-		
+
+		<div id"results">
+			<a id="mapanch" target="_blank"><div id="mapurl"></div></a>
+			<div id="photo"></div>
+		</div>
+
+		<footer>
+			<img id="dsfoot" src="dsfoot.png">
+			<img id="glogo" src="powered_by_google_on_white.png">
+			<p style="font-size:50%">*Note: Also powered by me. Brett.</p>
+		</footer>
+
 		<script type="text/javascript" id="info" async defer></script>
 		<script type="text/javascript" src="info.js"></script>
  		<script type="text/javascript" src="ds.js"></script>
-		<script type="text/javascript" src="images.js"></script>
+		<!-- <script type="text/javascript" src="images.js"></script> -->
 
 	</body>
 </html>
