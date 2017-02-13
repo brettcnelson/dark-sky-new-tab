@@ -6,6 +6,10 @@ html body {
 	height: 100%;
 }
 
+#forecast_embed {
+	/*height:100%;*/
+}
+
 .grayscale {
 /*	width:100px;
 	height:100px;
@@ -17,23 +21,37 @@ html body {
   filter: gray;*/
 }
 
+a {
+	color:black;
+}
+
 #pic {
 	/*opacity: .67;*/
 	margin:5px;
 	padding:5px;
-	width: 20%;
+	width: 15%;
 	display:block;
 }
 
-#glogo {
-	/*margin:auto;*/
-	display:block;
+/*#glogo {
+	right:0;
 	width:15%;
-}
+	position:absolute;
+}*/
 
-#dsfoot {
-	display:block;
-	width:20%;
+/*#ds {
+	left:0;
+	position:absolute;
+	margin:10px;
+	padding:10px;
+}*/
+
+#google {
+	right:0;
+	/*position:fixed;*/
+	float:right;
+	margin:10px;
+	padding:10px;
 }
 
 #loading {
@@ -61,10 +79,27 @@ html body {
 	right:20px;
 }*/
 
-#saveLocbtn:hover, #default:hover{
-	background-color: #2F2F2F;
-	color: white;
-	cursor:cell;
+#check {
+	background-color: white
+}
+
+#prevsaved {
+	height:100%;
+	width:10%;
+	background-color: black;
+	color:white;
+}
+
+#saveLocbtn {
+	height:100%;
+	width:10%;
+	/*position:absolute;*/
+	/*left:300px;*/
+	/*margin:auto;*/
+}
+
+#saveLocbtn:hover {
+	cursor:pointer;
 }
 
 #directions, #clear {
@@ -83,13 +118,13 @@ html body {
 
 #loc {
   padding: 10px;
-  border: solid 1px #fff;
-  box-shadow: inset 1px 1px 2px 0 #707070;
+  /*border: solid 10px #fff;*/
+  /*box-shadow: inset 1px 1px 2px 0 #707070;*/
   transition: box-shadow 0.3s;
-  /*background-color: #2F2F2F;*/
+  background-color: black;
   background-color: white;
   color: black;
-  width: 25%;
+  width: 15%;
   display:block;
   margin: auto;
   text-align: center
@@ -97,8 +132,8 @@ html body {
 
 #loc:hover {
 	cursor: cell;
-	background-color: white;
-	color: black;
+	background-color:black;
+	color: white;
 }
 
 table {
@@ -161,11 +196,11 @@ tbody:hover tr:hover td {
 	text-shadow: 0 1px 0 #fff;
 }
 
-/*footer {
+footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-}*/
+}
 
 .signal {
     border: 5px solid #333;
@@ -179,7 +214,7 @@ tbody:hover tr:hover td {
     width: 30px;
  
     animation: pulsate .75s ease-out;
-    animation-iteration-count: infinite;
+    animation-iteration-count: 20;
 }
 
 @keyframes pulsate {

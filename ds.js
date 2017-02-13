@@ -41,11 +41,11 @@ var iframe = document.getElementById('forecast_embed')
 
 document.getElementById('loading').style.display = 'none'
 
+document.getElementById('prevsaved').style.display = 'none'
+
 document.getElementById('locSearch').focus()
 
-document.getElementById('mapurl').style.display = 'none'
 
-popList()
 
 // if (localStorage['*default']) {
 // 	console.log('def', localStorage['*default'][0])
@@ -60,19 +60,56 @@ if (sessionStorage['*pending']) {
 	}
 	iframe.src = sessionStorage['*pending']
 	sessionStorage.removeItem('*pending')
+	geosrc()
+	popList()
 }
 else {
 	getLocation()
 }
 
 if (sessionStorage['*results']) {
-	document.getElementById('mapurl').style.display = ''
 	var results = JSON.parse(sessionStorage['*results'])
 	console.log('pending results', results)
 	var url = results.url
 	var text = 'Look at ' + results.name + ' on google maps'
 	document.getElementById('mapurl').innerHTML = text
 	document.getElementById('mapanch').href = results.url
+}
+
+function hideLinks() {
+	var links = document.getElementsByClassName('links')
+	links[0].style.display = 'none'
+	links[1].style.display = 'none'
+	console.log('hidelinks')
+}
+
+function getName() {
+	if (iframe.src.split('forecast.io/embed').length) {
+		var name;
+		if (sessionStorage['*results']) {
+			name = JSON.parse(sessionStorage['*results']).name
+		}
+		else {
+			name = iframe.src.split('&name=')[1]	
+		}
+	}
+	return name;
+}
+
+function geosrc() {
+	var name = getName()
+	document.getElementById('dsanch').innerHTML = name + ' at Dark Sky'
+	var lat = iframe.src.split('=')[1].split('&')[0]
+	var lng = iframe.src.split('&lon=')[1].split('&')[0]
+	document.getElementById('dsanch').href = 'https://darksky.net/' + lat + ',' + lng
+	if (!sessionStorage['*results']) {
+		var text = 'Look at ' + name + ' on google maps'
+		// var coords = 
+		var url = 'http://maps.google.com/?q=' + lat + ',' + lng
+		document.getElementById('mapurl').innerHTML = text
+		document.getElementById('mapanch').href = url
+		// console.log(url)
+	}
 }
 
 function initAutocomplete() {
@@ -82,6 +119,9 @@ function initAutocomplete() {
 }
 
 function getLocation(force) {
+	if (force) {
+		hideLinks()
+	}
 	sessionStorage.removeItem('*results')
 	document.getElementById('loading').style.display = ''
 	document.getElementById('loc').style.display = 'none'
@@ -100,6 +140,7 @@ function getLocation(force) {
 				var locName = address[0].short_name + ' ' + address[1].short_name + ' in ' + address[3].short_name
 				iframe.src = "https://forecast.io/embed/#lat=" + locLat.toFixed(4) + "&lon=" + locLon.toFixed(4) + "&name=" + locName
 				sessionStorage.setItem(locName, iframe.src)
+				geosrc()
 				if (force === true) {
 					sessionStorage['*pending'] = iframe.src
 					sessionStorage['*geocode'] = true
@@ -131,7 +172,24 @@ function changeSrc() {
 	location.reload()
 }
 
+function toggleSave() {
+	if (document.getElementById('saveLocbtn').style.display = 'none') {
+		document.getElementById('saveLocbtn').style.display = ''
+		document.getElementById('prevsaved').style.display = 'none';
+	}
+	if (document.getElementById('prevsaved').style.display = 'none') {
+		document.getElementById('saveLocbtn').style.display = 'none'
+		document.getElementById('prevsaved').style.display = '';		
+	}
+}
+
 function popList() {
+
+	for (var key in localStorage) {
+		if (sessionStorage[key]) {
+			sessionStorage.removeItem(key)
+		}
+	}
 
 	function pop(id1, id2, storage) {
 		var table = document.getElementById(id1)
@@ -142,8 +200,11 @@ function popList() {
 			if (key[0] !== '*') {
 				var newRow = table.insertRow(table.rows.length)
 				var newCell = newRow.insertCell(0)
+				var div = document.createElement('DIV')
+				div.innerHTML = '<div contextmenu="mymenu"><menu type="context" id="mymenu"><menuitem label="DELETE"></menuitem></menu></div>'
 				var newText = document.createTextNode(key)
-				newCell.appendChild(newText)
+				newCell.appendChild(div)
+				div.appendChild(newText)
 				newCell.classList.add('places')
 			}
 		}
@@ -153,23 +214,28 @@ function popList() {
 
 	pop('recent', 'rectable', sessionStorage)
 	pop('saved', 'savtable', localStorage)
-
+	var name = iframe.src.split('&name=')[1]
 	var places = document.querySelectorAll('.places')
 	for (var i = 0 ; i < places.length ; i++) {
+		if (localStorage[places[i].innerHTML] && places[i].innerHTML === name) {
+			toggleSave()
+			// console.log('in', places[i].innerHTML, name)
+		}
+		// console.log('out', places[i].innerHTML, name)
 		var el = places[i]
 		var search = document.getElementById('locSearch')
-		el.ondblclick = function() {
+		el.oncontextmenu = function() {
 			if (localStorage[this.innerHTML]) {
 				search.value = ''
 				search.blur()
 				localStorage.removeItem(this.innerHTML)
 				localStorage.removeItem('*' + this.innerHTML)
-				popList()
 			}
 		}
 		el.onclick = function() {
+			var newsrc;
 			if (localStorage['*' + this.innerHTML]) {
-				var newsrc = localStorage[this.innerHTML]
+				newsrc = localStorage[this.innerHTML]
 				sessionStorage['*results'] = localStorage['*' + this.innerHTML]
 			}
 			else if (sessionStorage[this.innerHTML]) {
@@ -181,8 +247,14 @@ function popList() {
 					sessionStorage.removeItem('*results')
 				}
 			}
-			sessionStorage['*pending'] = newsrc
-			search.value = this.innerHTML
+			if (!newsrc) {
+				newsrc = iframe.src
+			}
+			else {
+				sessionStorage['*pending'] = newsrc
+				search.value = this.innerHTML
+			}
+
 			location.reload()
 		}
 	}

@@ -6,7 +6,8 @@
 	</head>
 	<body>
 
-		<a href="https://darksky.net/" target="_blank"><img id="pic" src="pbds.png"></a><div></div>
+		<a style="display:block" href="https://darksky.net/" target="_blank"><img id="pic" src="pbds.png"></a><div></div>	 		
+		<button id="saveLocbtn">save this location</button><button id="prevsaved">=> saved</button>
  		<iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src=""></iframe></div>
  		<div id="loading">
 	 		<div class="signal"></div>
@@ -14,13 +15,9 @@
 	 		 		<!-- <div height="245" width="100%"><img src="darksky.gif"><p id="error">Loading your location . . . </p></div> -->
  		</div>
 
- 		
  		<div><input id="locSearch" placeholder="Search for a city, zipcode, address ..."></div>
- 		<div id="loc">Get Your Location</div>
- 		<div id="saveLoc">
-	 		<button id="saveLocbtn">save this location</button>
-	 		<!-- <button id="default">set as default</button> -->
-	 	</div>
+ 		<button id="loc">Get Your Location</button>
+ 		<div contextmenu="menu">menu</div>
 
 		<table id="savtable">
 		  <thead>
@@ -45,16 +42,24 @@
 		  </tbody>
 		</table>
 
-		<div id"results">
-			<a id="mapanch" target="_blank"><div id="mapurl"></div></a>
-			<div id="photo"></div>
-		</div>
+		<!-- <div id="infos"> -->
+			<div id="google">
+				<div id"results">
+					<a class="links" id="mapanch" target="_blank"><div id="mapurl"></div></a>
+					<div id="photo"></div>
+				</div>
+				<img id="glogo" src="powered_by_google_on_white.png"><span>*</span>
+				<!-- <p>*</p> -->
+			</div>
 
-		<footer>
-			<img id="dsfoot" src="dsfoot.png">
-			<img id="glogo" src="powered_by_google_on_white.png">
-			<p style="font-size:50%">*Note: Also powered by me. Brett.</p>
-		</footer>
+			<div id="ds">
+				<a id="dsanch" class="links" style="display:inline;width:30%" target="_blank" href=""></a>
+				<img id="dsfoot" style="display:block" src="dsfoot.png">
+				<a style="display:block;width:10%;position:absolute" href="https://darksky.net/app/" target="_blank">get the app(s)</a>
+			</div>
+				
+			<p id="note" style="padding:10px;font-size: 50%">*Note: Also powered by me. Brett.</p>
+		<!-- </div> -->
 
 		<script type="text/javascript" id="info" async defer></script>
 		<script type="text/javascript" src="info.js"></script>
