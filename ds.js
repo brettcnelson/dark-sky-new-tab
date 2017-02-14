@@ -200,11 +200,8 @@ function popList() {
 			if (key[0] !== '*') {
 				var newRow = table.insertRow(table.rows.length)
 				var newCell = newRow.insertCell(0)
-				var div = document.createElement('DIV')
-				div.innerHTML = '<div contextmenu="mymenu"><menu type="context" id="mymenu"><menuitem label="DELETE"></menuitem></menu></div>'
 				var newText = document.createTextNode(key)
-				newCell.appendChild(div)
-				div.appendChild(newText)
+				newCell.appendChild(newText)
 				newCell.classList.add('places')
 			}
 		}
