@@ -1,3 +1,32 @@
+var deleteSaved = false
+
+document.getElementById('deleteSaved').onclick = function() {
+	if (deleteSaved) {
+		deleteSaved = false;
+		document.getElementById('deleteSaved').innerHTML = 'click this and the location you click next will be deleted'
+		var table = document.getElementById('savtable')
+		table.deleteRow(1)
+	}
+	else {
+		deleteSaved = true;
+		document.getElementById('deleteSaved').innerHTML = 'click here to stop delete selection'	
+		var table = document.getElementById('savtable')
+		var newRow = table.insertRow(1)
+		var newCell = newRow.insertCell(0)
+		var newDiv = document.createElement('DIV')
+		newDiv.innerHTML = 'CLICK ON A ROW TO DELETE IT'
+		newCell.appendChild(newDiv)
+		setTimeout(function() {
+			if (deleteSaved) {
+				document.getElementById('deleteSaved').innerHTML = 'click this and the location you click next will be deleted'
+				var table = document.getElementById('savtable')
+				table.deleteRow(1)
+				deleteSaved = false
+			}
+		}, 10000)
+	}
+}
+
 document.getElementById('loc').onclick = function () {
 	getLocation(true)
 }
@@ -45,8 +74,6 @@ document.getElementById('prevsaved').style.display = 'none'
 
 document.getElementById('locSearch').focus()
 
-
-
 // if (localStorage['*default']) {
 // 	console.log('def', localStorage['*default'][0])
 // 	iframe.src = JSON.parse(localStorage['*default'])[0]
@@ -69,10 +96,10 @@ else {
 
 if (sessionStorage['*results']) {
 	var results = JSON.parse(sessionStorage['*results'])
-	console.log('pending results', results)
+	// console.log('pending results', results)
 	var url = results.url
 	var text = 'Look at ' + results.name + ' on google maps'
-	document.getElementById('mapurl').innerHTML = text
+	document.getElementById('mapanch').innerHTML = text
 	document.getElementById('mapanch').href = results.url
 }
 
@@ -80,7 +107,6 @@ function hideLinks() {
 	var links = document.getElementsByClassName('links')
 	links[0].style.display = 'none'
 	links[1].style.display = 'none'
-	console.log('hidelinks')
 }
 
 function getName() {
@@ -103,10 +129,10 @@ function geosrc() {
 	var lng = iframe.src.split('&lon=')[1].split('&')[0]
 	document.getElementById('dsanch').href = 'https://darksky.net/' + lat + ',' + lng
 	if (!sessionStorage['*results']) {
-		var text = 'Look at ' + name + ' on google maps'
+		var text = name + ' on google maps'
 		// var coords = 
 		var url = 'http://maps.google.com/?q=' + lat + ',' + lng
-		document.getElementById('mapurl').innerHTML = text
+		document.getElementById('mapanch').innerHTML = text
 		document.getElementById('mapanch').href = url
 		// console.log(url)
 	}
@@ -132,7 +158,7 @@ function getLocation(force) {
 		var geocoder = new google.maps.Geocoder
 		geocoder.geocode({'location': {lat: locLat, lng: locLon}}, function(results, status) {
 			if (status === 'OK') {
-				console.log('geocode res', results)
+				// console.log('geocode res', results)
 				document.getElementById('loading').style.display = 'none'
 				iframe.style.display = 'inline'
 				// var locName = results[0].formatted_address
@@ -213,46 +239,56 @@ function popList() {
 	pop('saved', 'savtable', localStorage)
 	var name = iframe.src.split('&name=')[1]
 	var places = document.querySelectorAll('.places')
+	if (!localStorage.length) {
+		document.getElementById('saveLocbtn').style.display = ''
+		document.getElementById('prevsaved').style.display = 'none';
+		// toggleSave()
+	}
 	for (var i = 0 ; i < places.length ; i++) {
 		if (localStorage[places[i].innerHTML] && places[i].innerHTML === name) {
+			console.log('placefound')
 			toggleSave()
-			// console.log('in', places[i].innerHTML, name)
 		}
-		// console.log('out', places[i].innerHTML, name)
 		var el = places[i]
 		var search = document.getElementById('locSearch')
-		el.oncontextmenu = function() {
-			if (localStorage[this.innerHTML]) {
-				search.value = ''
-				search.blur()
-				localStorage.removeItem(this.innerHTML)
-				localStorage.removeItem('*' + this.innerHTML)
-			}
-		}
+
 		el.onclick = function() {
-			var newsrc;
-			if (localStorage['*' + this.innerHTML]) {
-				newsrc = localStorage[this.innerHTML]
-				sessionStorage['*results'] = localStorage['*' + this.innerHTML]
-			}
-			else if (sessionStorage[this.innerHTML]) {
-				var newsrc = sessionStorage[this.innerHTML]
-				if (sessionStorage['*' + this.innerHTML]) {
-					sessionStorage['*results'] = sessionStorage['*' + this.innerHTML]
+			if (deleteSaved) {
+				deleteSaved = false
+				var table = document.getElementById('savtable')
+				table.deleteRow(1)
+				document.getElementById('deleteSaved').innerHTML = 'click this and the location you click next will be deleted'
+				if (localStorage[this.innerHTML]) {
+					localStorage.removeItem(this.innerHTML)
+					localStorage.removeItem('*' + this.innerHTML)
+					popList()
 				}
-				else {
-					sessionStorage.removeItem('*results')
-				}
-			}
-			if (!newsrc) {
-				newsrc = iframe.src
 			}
 			else {
+				var newsrc;
+				if (localStorage[this.innerHTML]) {
+					newsrc = localStorage[this.innerHTML]
+					if (localStorage['*' + this.innerHTML]) {	
+						sessionStorage['*results'] = localStorage['*' + this.innerHTML]
+					}
+				}
+				if (sessionStorage[this.innerHTML]) {
+					var newsrc = sessionStorage[this.innerHTML]
+					if (sessionStorage['*' + this.innerHTML]) {
+						sessionStorage['*results'] = sessionStorage['*' + this.innerHTML]
+					}
+					else {
+						sessionStorage.removeItem('*results')
+					}
+				}
+				if (!newsrc) {
+					newsrc = iframe.src
+				}
 				sessionStorage['*pending'] = newsrc
 				search.value = this.innerHTML
-			}
 
-			location.reload()
+				location.reload()
+			}
 		}
 	}
 }
