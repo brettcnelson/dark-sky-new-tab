@@ -1,6 +1,6 @@
-/*body {
+body {
 	background-color: #f7f7f7
-}*/
+}
 
 a {
 	color:black;
@@ -159,14 +159,14 @@ tbody:hover tr:hover td {
 #ds {
 	width:47%;
 	display:inline-block;
-	margin:15px;
+	padding:10px;
 }
 
 #google {
 	width:47%;
 	display: inline-block;
 	left:0px;
-	margin:15px;
+	padding:10px;
 }
 
 .links {
@@ -183,10 +183,10 @@ tbody:hover tr:hover td {
 }
 
 img {
-	/*padding:10px;*/
-  filter: gray; /* IE6-9 */
-  filter: grayscale(1); /* Microsoft Edge and Firefox 35+ */
-  -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
+  filter: gray; 
+  filter: grayscale(1); 
+  -webkit-filter: grayscale(1);
   margin:auto;
   display: block;
+  padding:10px;
 }

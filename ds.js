@@ -3,7 +3,7 @@ var deleteSaved = false
 document.getElementById('deleteSaved').onclick = function() {
 	if (deleteSaved) {
 		deleteSaved = false;
-		document.getElementById('deleteSaved').innerHTML = 'click this and the location you click next will be deleted'
+		document.getElementById('deleteSaved').innerHTML = 'click to select a row to delete'
 		var table = document.getElementById('savtable')
 		table.deleteRow(1)
 	}
@@ -18,7 +18,7 @@ document.getElementById('deleteSaved').onclick = function() {
 		newCell.appendChild(newDiv)
 		setTimeout(function() {
 			if (deleteSaved) {
-				document.getElementById('deleteSaved').innerHTML = 'click this and the location you click next will be deleted'
+				document.getElementById('deleteSaved').innerHTML = 'click to select a row to delete'
 				var table = document.getElementById('savtable')
 				table.deleteRow(1)
 				deleteSaved = false
@@ -64,17 +64,6 @@ document.getElementById('saveLocbtn').onclick = function () {
 	}	
 }
 
-// document.getElementById('default').onclick = function() {
-// 	// console.log(iframe.src, sessionStorage)
-// 	for (var key in sessionStorage) {
-// 		if (sessionStorage[key] === iframe.src) {
-// 			var defaults = [iframe.src, sessionStorage['*' + key]]
-// 		}
-// 	}
-// 	localStorage.setItem('*default', JSON.stringify(defaults))
-// 	console.log(localStorage['*default'])
-// }
-
 document.getElementById('remove').onclick = function () {
 	localStorage.clear()
 	popList()
@@ -94,6 +83,17 @@ document.getElementById('prevsaved').style.display = 'none'
 document.getElementById('locSearch').focus()
 
 document.getElementById('tables').style.display = 'none'
+
+// document.getElementById('default').onclick = function() {
+// 	// console.log(iframe.src, sessionStorage)
+// 	for (var key in sessionStorage) {
+// 		if (sessionStorage[key] === iframe.src) {
+// 			var defaults = [iframe.src, sessionStorage['*' + key]]
+// 		}
+// 	}
+// 	localStorage.setItem('*default', JSON.stringify(defaults))
+// 	console.log(localStorage['*default'])
+// }
 
 // if (localStorage['*default']) {
 // 	console.log('def', localStorage['*default'][0])
@@ -288,7 +288,7 @@ function popList() {
 				deleteSaved = false
 				var table = document.getElementById('savtable')
 				table.deleteRow(1)
-				document.getElementById('deleteSaved').innerHTML = 'click this and the location you click next will be deleted'
+				document.getElementById('deleteSaved').innerHTML = 'click to select a row to delete'
 				if (localStorage[this.innerHTML]) {
 					localStorage.removeItem(this.innerHTML)
 					localStorage.removeItem('*' + this.innerHTML)
@@ -323,3 +323,23 @@ function popList() {
 		}
 	}
 }
+
+// document.getElementById('allpics').onclick = function() {
+// 	if (sessionStorage['*results']) {
+// 		var curr = document.getElementById('test')
+// 		curr.parentNode.removeChild(curr)
+// 		var photos = JSON.parse(sessionStorage['*results']).photourls
+// 		photos.forEach(function(x) {
+// 			document.getElementById('allpics').innerHTML = photos.length
+// 			var img = document.createElement('IMG')
+// 			img.src = x
+// 			document.getElementById('picdiv').appendChild(img)
+// 		}) 
+// 	}
+// }
+
+// document.getElementById('allpics').onclick = function() {
+// 	document.getElementById('saveLocbtn').style.color = 'blue'
+// }
+// backgroundColor, webkit filter
+
