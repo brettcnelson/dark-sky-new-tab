@@ -14,17 +14,16 @@
 	 		</div>
 
 	 		<div id="iframe-con">
-	 			<button id="saveLocbtn">save this location</button><button id="prevsaved">&#9734 saved</button>
 	 			<iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src=""></iframe>
 	 		</div>
-
-			<div class="locline">
-				<button id="loc">Get Your Location</button>
-			</div>
 
 	 		<div class="locline">
 	 				<input id="locSearch" placeholder="Search for a city, zipcode, address ...">
 	 		</div>
+
+			<div><button id="saveLocbtn">save this place</button><button id="prevsaved">&#9734 saved</button></div>
+			<div><button id="show-tables">show saved places</button></div>
+			<button id="loc">get your location</button>
 
 			<div id="infos">
 
@@ -32,7 +31,7 @@
 					<table id="savtable">
 					  <thead>
 					    <tr>
-					      <th>Saved Locations
+					      <th>Saved Places
 					      	<div id="directions"><button id="remove">remove all</button> or 
 					      	<button id="deleteSaved">click this and the location you click next will be deleted</button>
 					      	</div>
@@ -56,20 +55,19 @@
 
 				<div id="ds">
 					<a id="dsanch" class="links" target="_blank" href=""></a>
-					<img style="width:50%" class="logo" src="dsfoot.png">
-					<a href="https://darksky.net/app/" target="_blank">get the app(s)</a>
+					<img style="width:40%" class="logo" src="dsfoot.png">
+					<a class="links" href="https://darksky.net/app/" target="_blank">get the app(s)</a>
 				</div>
 
 				<div id="google">
-				<div style="float:right">
-					<a class="links" id="mapanch" target="_blank"></a>
-					<!-- <div id="photo"></div> -->
-					<img class="logo" style="float:right" src="powered_by_google_on_white.png">
+					<div style="float:right">
+						<a class="links" id="mapanch" target="_blank"></a>
+						<img class="logo" style="float:right" src="powered_by_google_on_white.png">
 					</div>
 				</div>
 			</div>
 
-			<!-- <div id="note">*Note: Also powered by me. Brett.</div> -->
+			<!-- <div id="foot" id="note">*Note: Also powered by me. Brett.</div> -->
 		<!-- </div> -->
 
 		<script type="text/javascript" id="info" async defer></script>

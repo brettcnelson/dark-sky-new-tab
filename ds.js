@@ -27,6 +27,25 @@ document.getElementById('deleteSaved').onclick = function() {
 	}
 }
 
+document.getElementById('show-tables').onclick = function() {
+	if (document.getElementById('show-tables').innerHTML === 'hide saved places') {
+			document.getElementById('show-tables').innerHTML = 'show saved places'
+			document.getElementById('tables').style.display = 'none'
+		}
+		else {
+			if (!localStorage.length && !sessionStorage.length) {
+				document.getElementById('show-tables').innerHTML = 'you don\'t have any saved places'
+				setTimeout(function() {
+					document.getElementById('show-tables').innerHTML = 'show saved places'
+				}, 2000)
+			}
+			else {
+				document.getElementById('show-tables').innerHTML = 'hide saved places'
+				document.getElementById('tables').style.display = ''
+			}
+		}
+}
+
 document.getElementById('loc').onclick = function () {
 	getLocation(true)
 }
@@ -74,6 +93,8 @@ document.getElementById('prevsaved').style.display = 'none'
 
 document.getElementById('locSearch').focus()
 
+document.getElementById('tables').style.display = 'none'
+
 // if (localStorage['*default']) {
 // 	console.log('def', localStorage['*default'][0])
 // 	iframe.src = JSON.parse(localStorage['*default'])[0]
@@ -96,9 +117,8 @@ else {
 
 if (sessionStorage['*results']) {
 	var results = JSON.parse(sessionStorage['*results'])
-	// console.log('pending results', results)
 	var url = results.url
-	var text = 'Look at ' + results.name + ' on google maps'
+	var text = results.name + ' on google maps'
 	document.getElementById('mapanch').innerHTML = text
 	document.getElementById('mapanch').href = results.url
 }
@@ -130,11 +150,9 @@ function geosrc() {
 	document.getElementById('dsanch').href = 'https://darksky.net/' + lat + ',' + lng
 	if (!sessionStorage['*results']) {
 		var text = name + ' on google maps'
-		// var coords = 
 		var url = 'http://maps.google.com/?q=' + lat + ',' + lng
 		document.getElementById('mapanch').innerHTML = text
 		document.getElementById('mapanch').href = url
-		// console.log(url)
 	}
 }
 
@@ -199,11 +217,11 @@ function changeSrc() {
 }
 
 function toggleSave() {
-	if (document.getElementById('saveLocbtn').style.display = 'none') {
+	if (document.getElementById('saveLocbtn').style.display === 'none') {
 		document.getElementById('saveLocbtn').style.display = ''
 		document.getElementById('prevsaved').style.display = 'none';
 	}
-	if (document.getElementById('prevsaved').style.display = 'none') {
+	if (document.getElementById('prevsaved').style.display === 'none') {
 		document.getElementById('saveLocbtn').style.display = 'none'
 		document.getElementById('prevsaved').style.display = '';		
 	}
@@ -242,11 +260,9 @@ function popList() {
 	if (!localStorage.length) {
 		document.getElementById('saveLocbtn').style.display = ''
 		document.getElementById('prevsaved').style.display = 'none';
-		// toggleSave()
 	}
 	for (var i = 0 ; i < places.length ; i++) {
 		if (localStorage[places[i].innerHTML] && places[i].innerHTML === name) {
-			console.log('placefound')
 			toggleSave()
 		}
 		var el = places[i]
