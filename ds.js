@@ -32,18 +32,18 @@ document.getElementById('show-tables').onclick = function() {
 			document.getElementById('show-tables').innerHTML = 'show saved places'
 			document.getElementById('tables').style.display = 'none'
 		}
-		else {
-			if (!localStorage.length && !sessionStorage.length) {
-				document.getElementById('show-tables').innerHTML = 'you don\'t have any saved places'
-				setTimeout(function() {
-					document.getElementById('show-tables').innerHTML = 'show saved places'
-				}, 2000)
-			}
-			else {
-				document.getElementById('show-tables').innerHTML = 'hide saved places'
-				document.getElementById('tables').style.display = ''
-			}
+	else {
+		if (!localStorage.length && !sessionStorage.length) {
+			document.getElementById('show-tables').innerHTML = 'you don\'t have any saved places'
+			setTimeout(function() {
+				document.getElementById('show-tables').innerHTML = 'show saved places'
+			}, 2000)
 		}
+		else {
+			document.getElementById('show-tables').innerHTML = 'hide saved places'
+			document.getElementById('tables').style.display = ''
+		}
+	}
 }
 
 document.getElementById('loc').onclick = function () {
@@ -121,6 +121,10 @@ if (sessionStorage['*results']) {
 	var text = results.name + ' on google maps'
 	document.getElementById('mapanch').innerHTML = text
 	document.getElementById('mapanch').href = results.url
+	if (results.photourls) {
+		var ind = Math.floor(Math.random() * results.photourls.length)
+		document.getElementById('test').src = results.photourls[ind]
+	}
 }
 
 function hideLinks() {
@@ -165,6 +169,7 @@ function initAutocomplete() {
 function getLocation(force) {
 	if (force) {
 		hideLinks()
+		document.getElementById('test').style.display = 'none'
 	}
 	sessionStorage.removeItem('*results')
 	document.getElementById('loading').style.display = ''
@@ -204,6 +209,13 @@ function getLocation(force) {
 function changeSrc() {
 	// var locName = document.getElementById('locSearch').value
 	var results = autocomplete.getPlace()
+	if (results.photos) {
+		var photourls = []
+		for (var i = 0 ; i < results.photos.length ; i++) {
+			photourls.push(results.photos[i].getUrl({'maxWidth': 500, 'maxHeight': 500}))
+		}
+		results.photourls = photourls
+	}
 	var locName = results.formatted_address
 	locLat = results.geometry.location.lat().toFixed(4)
 	locLon = results.geometry.location.lng().toFixed(4)
@@ -212,7 +224,6 @@ function changeSrc() {
 	sessionStorage.setItem(locName, url)
 	sessionStorage.setItem('*' + locName, JSON.stringify(results))
 	sessionStorage.setItem('*results', JSON.stringify(results))
-
 	location.reload()
 }
 
@@ -255,12 +266,16 @@ function popList() {
 
 	pop('recent', 'rectable', sessionStorage)
 	pop('saved', 'savtable', localStorage)
-	var name = iframe.src.split('&name=')[1]
-	var places = document.querySelectorAll('.places')
+	document.getElementById('show-tables').display = ''
 	if (!localStorage.length) {
 		document.getElementById('saveLocbtn').style.display = ''
 		document.getElementById('prevsaved').style.display = 'none';
+		if (!sessionStorage.length) {
+			document.getElementById('show-tables').style.display = 'none'
+		}
 	}
+	var name = iframe.src.split('&name=')[1]
+	var places = document.querySelectorAll('.places')
 	for (var i = 0 ; i < places.length ; i++) {
 		if (localStorage[places[i].innerHTML] && places[i].innerHTML === name) {
 			toggleSave()
