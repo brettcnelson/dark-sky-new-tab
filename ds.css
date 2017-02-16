@@ -7,7 +7,6 @@ a {
 }
 
 button {
-	/*padding:10px;*/
 	margin:5px;
 }
 
@@ -28,32 +27,32 @@ button:hover {
 }
 
 .signal {
-    border: 5px solid #333;
-    border-radius: 30px;
-    height: 30px;
-    left: 50%;
-    margin: -15px 0 0 -15px;
-    opacity: 0;
-    position: absolute;
-    top: 5%;
-    width: 30px;
- 
-    animation: pulsate .75s ease-out;
-    animation-iteration-count: 20;
+  border: 5px solid #333;
+  border-radius: 30px;
+  height: 30px;
+  left: 50%;
+  margin: -15px 0 0 -15px;
+  opacity: 0;
+  position: absolute;
+  top: 5%;
+  width: 30px;
+
+  animation: pulsate .75s ease-out;
+  animation-iteration-count: 20;
 }
 
 @keyframes pulsate {
-    0% {
-      transform: scale(.1);
-      opacity: 0.0;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1.2);
-      opacity: 0;
-    }
+  0% {
+    transform: scale(.1);
+    opacity: 0.0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
 }
 
 #prevsaved {
@@ -70,7 +69,6 @@ button:hover {
   border: solid 1px #fff;
   box-shadow: inset 1px 1px 2px 0 #707070;
   transition: box-shadow 0.3s;
-  /*background-color: #2F2F2F;*/
   background-color: black;
   color: white;
   width: 50%;
@@ -183,9 +181,9 @@ tbody:hover tr:hover td {
 }
 
 img {
-  filter: gray; 
+/*  filter: gray; 
   filter: grayscale(1); 
-  -webkit-filter: grayscale(1);
+  -webkit-filter: grayscale(1);*/
   margin:auto;
   display: block;
   padding:10px;

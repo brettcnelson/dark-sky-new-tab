@@ -84,6 +84,8 @@ document.getElementById('locSearch').focus()
 
 document.getElementById('tables').style.display = 'none'
 
+// ************** SET DEFAULT NOTES ****************************
+
 // document.getElementById('default').onclick = function() {
 // 	// console.log(iframe.src, sessionStorage)
 // 	for (var key in sessionStorage) {
@@ -101,6 +103,7 @@ document.getElementById('tables').style.display = 'none'
 // }
 
 // change this to else if - if the above if statement is uncommented
+//*******************************************************************
 if (sessionStorage['*pending']) {
 	if (sessionStorage['*geocode']) {
 		document.getElementById('loc').style.display = 'none'
@@ -121,10 +124,10 @@ if (sessionStorage['*results']) {
 	var text = results.name + ' on google maps'
 	document.getElementById('mapanch').innerHTML = text
 	document.getElementById('mapanch').href = results.url
-	if (results.photourls) {
-		var ind = Math.floor(Math.random() * results.photourls.length)
-		document.getElementById('test').src = results.photourls[ind]
-	}
+	// if (results.photourls) {
+	// 	var ind = Math.floor(Math.random() * results.photourls.length)
+	// 	document.getElementById('test').src = results.photourls[ind]
+	// }
 }
 
 function hideLinks() {
@@ -212,7 +215,7 @@ function changeSrc() {
 	if (results.photos) {
 		var photourls = []
 		for (var i = 0 ; i < results.photos.length ; i++) {
-			photourls.push(results.photos[i].getUrl({'maxWidth': 500, 'maxHeight': 500}))
+			photourls.push(results.photos[i].getUrl({'maxWidth': 1000, 'maxHeight': 10000}))
 		}
 		results.photourls = photourls
 	}
@@ -324,6 +327,9 @@ function popList() {
 	}
 }
 
+// ********** PICTURE / IMG FILTER NOTES ******************************
+// also: lns 127-130
+
 // document.getElementById('allpics').onclick = function() {
 // 	if (sessionStorage['*results']) {
 // 		var curr = document.getElementById('test')
@@ -342,4 +348,4 @@ function popList() {
 // 	document.getElementById('saveLocbtn').style.color = 'blue'
 // }
 // backgroundColor, webkit filter
-
+// **********************************************************************
