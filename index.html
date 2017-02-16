@@ -7,25 +7,44 @@
 	<body>
 		<!-- <div id="main"> -->
 			<a href="https://darksky.net/" target="_blank"><img id="pic" src="pbds.svg"></a>
-
-			<div id="loading">
-		 		<div class="signal"></div>
-		 		<p id="error" style="text-align: center">Loading your location . . . </p>
-	 		</div>
-
+ 			
  			<iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src=""></iframe>
 
-			<input id="locSearch" placeholder="Search for a city, zipcode, address ...">
+			<div id="loading">
+		 		<img id="loadicon" src="lightning.webp" style="width:17%">
+		 		<p id="error" style="text-align: center"></p>
+ 			</div>
 
-			<div><button id="saveLocbtn">save this place</button><button id="prevsaved">&#9734 saved</button></div>
-			<div><button id="show-tables">show saved places</button></div>
-			<div><button id="loc">get your location</button></div>
+			<div>
+				<div style="display: inline-block;width:25%">
+					<div><button id="saveLocbtn">save this place</button><button id="prevsaved">&#9734 saved</button></div>
+					<div id="std"><button id="show-tables">show saved places</button></div>
+					<div><button id="loc">get your location</button></div>
+					</div>
+					<div style="display: inline-block;width:50%;vertical-align: top"><input id="locSearch" placeholder="Search for a city, zipcode, address ...">
+					<!-- <div style="display: inline-block;width:25%"> -->
+				</div>
+			</div>
 
-	 		<div id="tables">
+			<div>
+				<div id="ds">
+					<a id="dsanch" class="links" target="_blank" href=""></a>
+					<img style="width:33%;float:left"; class="logo" src="dsfoot.svg">
+				</div>
+
+				<div id="google">
+					<div>
+						<a class="links" style="text-align: right" id="mapanch" target="_blank"></a>
+						<img class="logo" style="float:right" src="powered_by_google_on_white.png">
+					</div>
+				</div>
+			</div>
+
+			<div id="tables">
 				<table id="savtable">
 				  <thead>
 				    <tr>
-				      <th>Saved Places
+				      <th id="deleteadd">Saved Places
 				      	<div id="directions"><button id="remove">remove all</button> or 
 				      	<button id="deleteSaved">click to select a row to delete</button>
 				      	</div>
@@ -39,24 +58,12 @@
 				<table id="rectable">
 				  <thead>
 				    <tr>
-				      <th>Recent Searches<button id="clear">clear recent searches</button></th>
+				      <th>Recent Searches<div><button id="clear">clear recent searches</button></div></th>
 				    </tr>
 				  </thead>
 				  <tbody id="recent">
 				  </tbody>
 				</table>
-			</div>
-
-			<div id="ds">
-				<a id="dsanch" class="links" target="_blank" href=""></a>
-				<img style="width:25%;float:left"; class="logo" src="dsfoot.svg">
-			</div>
-
-			<div id="google">
-				<div>
-					<a class="links" style="text-align: right" id="mapanch" target="_blank"></a>
-					<img class="logo" style="float:right" src="powered_by_google_on_white.png">
-				</div>
 			</div>
 
 <!-- 			<div id="picdiv"><img id="test" src=""></div>

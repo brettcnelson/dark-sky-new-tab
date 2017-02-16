@@ -7,7 +7,7 @@ a {
 }
 
 button {
-	margin:5px;
+	margin:7px;
 }
 
 button:hover {
@@ -26,35 +26,6 @@ button:hover {
 	display:block;
 }
 
-.signal {
-  border: 5px solid #333;
-  border-radius: 30px;
-  height: 30px;
-  left: 50%;
-  margin: -15px 0 0 -15px;
-  opacity: 0;
-  position: absolute;
-  top: 5%;
-  width: 30px;
-
-  animation: pulsate .75s ease-out;
-  animation-iteration-count: 20;
-}
-
-@keyframes pulsate {
-  0% {
-    transform: scale(.1);
-    opacity: 0.0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.2);
-    opacity: 0;
-  }
-}
-
 #prevsaved {
 	background-color: black;
 	color:white;
@@ -71,7 +42,7 @@ button:hover {
   transition: box-shadow 0.3s;
   background-color: black;
   color: white;
-  width: 50%;
+  width: 67%;
   display:block;
   margin: auto;
 }
@@ -85,8 +56,8 @@ table {
 	border-collapse: separate;
 	box-shadow: inset 0 1px 0 #fff;
 	font-size: 12px;
-	line-height: 24px;
-	margin: 30px auto;
+	line-height: 12px;
+	margin: 8px auto;
 	text-align: left;
 	width: 40%;
 	color: white;
@@ -102,7 +73,7 @@ th {
 	box-shadow: inset 0 1px 0 #999;
 	color: #fff;
   font-weight: bold;
-	padding: 10px 15px;
+	padding: 8px 8px;
 	position: relative;
 	text-shadow: 0 1px 0 #000;	
 }
@@ -111,19 +82,18 @@ th {
 	display: none;
 }
 
-#savtable:hover #directions {
+#savtable th:hover #directions {
 	display: block;
 }
 
-#rectable:hover #clear {
+#rectable th:hover #clear {
 	display: block;
-	text-align: center;
 	margin:auto;
 }
 
 th:after {
 	background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.08));
-	content: '';
+	/*content: '';*/
 	display: block;
 	height: 25%;
 	left: 0;
@@ -138,10 +108,9 @@ td {
 	border-left: 1px solid #e8e8e8;
 	border-top: 1px solid #fff;
 	border-bottom: 1px solid #e8e8e8;
-	padding: 10px 15px;
+	padding: 8px 8px;
 	position: relative;
 	transition: all 300ms;
-	font-style: bold;
 }	
 
 tbody:hover td {
@@ -155,16 +124,17 @@ tbody:hover tr:hover td {
 }
 
 #ds {
-	width:47%;
+	width:45%;
 	display:inline-block;
 	padding:10px;
 }
 
 #google {
-	width:47%;
+	width:45%;
 	display: inline-block;
-	left:0px;
+	/*left:0px;*/
 	padding:10px;
+	float:right;
 }
 
 .links {
@@ -172,18 +142,18 @@ tbody:hover tr:hover td {
 	font-size: 100%;
 }
 
-.logo {
+/*.logo {
 	display:block;
-}
+}*/
 
 #foot {
 	bottom:0px;
 }
 
 img {
-/*  filter: gray; 
+  filter: gray; 
   filter: grayscale(1); 
-  -webkit-filter: grayscale(1);*/
+  -webkit-filter: grayscale(1);
   margin:auto;
   display: block;
   padding:10px;

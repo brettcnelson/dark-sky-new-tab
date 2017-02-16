@@ -14,7 +14,10 @@ document.getElementById('deleteSaved').onclick = function() {
 		var newRow = table.insertRow(1)
 		var newCell = newRow.insertCell(0)
 		var newDiv = document.createElement('DIV')
-		newDiv.innerHTML = 'CLICK ON A ROW TO DELETE IT'
+		newDiv.innerHTML = '< CLICK ON A ROW TO DELETE IT >'
+		newDiv.style.textAlign = 'center'
+		newDiv.style.color = 'black'
+		newDiv.style.backgroundColor = '#f7f7f7'
 		newCell.appendChild(newDiv)
 		setTimeout(function() {
 			if (deleteSaved) {
@@ -83,6 +86,8 @@ document.getElementById('prevsaved').style.display = 'none'
 document.getElementById('locSearch').focus()
 
 document.getElementById('tables').style.display = 'none'
+
+document.getElementById('loadicon').style.display = 'none'
 
 // ************** SET DEFAULT NOTES ****************************
 
@@ -172,10 +177,11 @@ function initAutocomplete() {
 function getLocation(force) {
 	if (force) {
 		hideLinks()
-		document.getElementById('test').style.display = 'none'
+		// document.getElementById('test').style.display = 'none'
 	}
 	sessionStorage.removeItem('*results')
 	document.getElementById('loading').style.display = ''
+	document.getElementById('loadicon').style.display = ''
 	document.getElementById('loc').style.display = 'none'
 	iframe.style.display = 'none'
 	navigator.geolocation.getCurrentPosition(function(p) {
@@ -186,6 +192,7 @@ function getLocation(force) {
 			if (status === 'OK') {
 				// console.log('geocode res', results)
 				document.getElementById('loading').style.display = 'none'
+				document.getElementById('loadicon').style.display = 'none'
 				iframe.style.display = 'inline'
 				// var locName = results[0].formatted_address
 				var address = results[0].address_components
@@ -205,7 +212,18 @@ function getLocation(force) {
 			}
 		})
 	}, function(error) {
-			document.getElementById('error').innerHTML = error.message.toUpperCase() + ': Search for a location below'
+			document.getElementById('loadicon').style.display = 'none'
+			console.log('err =', error)
+			var err = document.getElementById('error')
+			if (error.code === 1) {
+				err.innerHTML = 'It loooks like you haven\'t enabled location permission.  Search for a location below'
+			}
+			if (error.code === 2) {
+				err.innerHTML = 'Your location is unavailable - check your connection or search for a location below'
+			}
+			if (error.code === 3) {
+				err.innerHTML = 'The location search timed out.  Search for a location below'
+			}
 	})
 }
 
@@ -215,7 +233,7 @@ function changeSrc() {
 	if (results.photos) {
 		var photourls = []
 		for (var i = 0 ; i < results.photos.length ; i++) {
-			photourls.push(results.photos[i].getUrl({'maxWidth': 1000, 'maxHeight': 10000}))
+			photourls.push(results.photos[i].getUrl({'maxWidth': 500, 'maxHeight': 200}))
 		}
 		results.photourls = photourls
 	}
@@ -269,7 +287,7 @@ function popList() {
 
 	pop('recent', 'rectable', sessionStorage)
 	pop('saved', 'savtable', localStorage)
-	document.getElementById('show-tables').display = ''
+	document.getElementById('show-tables').style.display = ''
 	if (!localStorage.length) {
 		document.getElementById('saveLocbtn').style.display = ''
 		document.getElementById('prevsaved').style.display = 'none';
@@ -328,7 +346,7 @@ function popList() {
 }
 
 // ********** PICTURE / IMG FILTER NOTES ******************************
-// also: lns 127-130
+// also: lns 129, 177
 
 // document.getElementById('allpics').onclick = function() {
 // 	if (sessionStorage['*results']) {
