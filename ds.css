@@ -5,11 +5,11 @@
 body {
 	background-color: #f7f7f7;
 	margin:0;
+	color:#333333;
 }
 
 a {
 	color:#333333;
-	display: block;
 }
 
 img {
@@ -23,7 +23,7 @@ button {
 	padding:3px;
 	background-color:#f7f7f7;
 	border:2px solid #333333;
-	border-radius:20%;
+	border-radius:17%;
 }
 
 button:hover {
@@ -31,13 +31,12 @@ button:hover {
 }
 
 /*#main {
-	width:100%;
-	height:100%;
+	
 }*/
 
 #headhead {
+	background-color: #333333;
 	height:2px;
-	background-color: #333333
 }
 
 #head {
@@ -60,13 +59,12 @@ button:hover {
 #button-container {
 	float:left;
 	width:24%;
-	/*text-align: right;*/
 	margin:0 0 0 1%;
 }
 
 #prevsaved {
 	background-color: #333333;
-	color:white;
+	color:#f7f7f7;
 }
 
 #search-container {
@@ -75,14 +73,14 @@ button:hover {
 }
 
 #locSearch {
-  outline:none;
-  font-size:16px;
-  /*padding: 4px;*/
   /*border: solid 1px #333333;*/
   /*box-shadow: inset 1px 1px 2px 0 #707070;*/
   /*transition: box-shadow 0.3s;*/
-  background-color: #f7f7f7;
   /*color: white;*/
+  outline:none;
+  font-size:16px;
+  padding: 1px;
+  background-color: #f7f7f7;
   width: 63%;
   display:block;
   margin: auto;
@@ -90,7 +88,7 @@ button:hover {
 
 #loc {
 	display:block;
-	margin:2px auto;
+	margin:5px auto;
 }
 
 #bottom-container {
@@ -111,7 +109,7 @@ table {
 	margin: 8px auto;
 	text-align: left;
 	width: 67%;
-	color: white;
+	color: #f7f7f7;
 }	
 
 th {
@@ -130,8 +128,8 @@ th {
 }
 
 th:after {
-	background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.08));
 	/*content: '';*/
+	background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.08));
 	display: block;
 	height: 25%;
 	left: 0;
@@ -156,13 +154,12 @@ tbody:hover td {
 }
 
 tbody:hover tr:hover td {
-	color: white;
+	color: #f7f7f7;
 	text-shadow: 0 1px 0 #fff;
 }
 
 #ds {
 	width:24%;
-	/*padding:10px;*/
 	margin:2% 0 0 1%;
 	float:left;
 }
@@ -173,7 +170,6 @@ tbody:hover tr:hover td {
 
 #google {
 	width:24%;
-	/*padding:10px;*/
 	float:right;
 	margin:2% 1% 0 0;
 }
@@ -197,8 +193,14 @@ tbody:hover tr:hover td {
 	height:20px;
 	background-color: #333333;
 	margin: 0 0 5px 0;
+	color:#f7f7f7;
 }
 
 .bottom:hover {
 	cursor:help;
+}
+
+#picdiv {
+	overflow:hidden;
+	padding:5px;
 }

@@ -87,8 +87,6 @@ document.getElementById('locSearch').focus()
 
 document.getElementById('tables').style.display = 'none'
 
-document.getElementById('loadicon').style.display = 'none'
-
 // ************** SET DEFAULT NOTES ****************************
 
 // document.getElementById('default').onclick = function() {
@@ -129,16 +127,22 @@ if (sessionStorage['*results']) {
 	var text = results.name + ' on google maps'
 	document.getElementById('mapanch').innerHTML = text
 	document.getElementById('mapanch').href = results.url
-	// if (results.photourls) {
-	// 	var ind = Math.floor(Math.random() * results.photourls.length)
-	// 	document.getElementById('test').src = results.photourls[ind]
-	// }
 }
 
 function hideLinks() {
 	var links = document.getElementsByClassName('links')
+	iframe.style.display = 'none'
 	links[0].style.display = 'none'
 	links[1].style.display = 'none'
+	document.getElementById('top-container').style.display = 'none'
+}
+
+function showLinks() {
+	var links = document.getElementsByClassName('links')
+	iframe.style.display = ''
+	links[0].style.display = ''
+	links[1].style.display = ''
+	document.getElementById('top-container').style.display = ''
 }
 
 function getName() {
@@ -175,15 +179,12 @@ function initAutocomplete() {
 }
 
 function getLocation(force) {
-	if (force) {
-		hideLinks()
-		document.getElementById('test').style.display = 'none'
-	}
+	hideLinks()
 	sessionStorage.removeItem('*results')
 	document.getElementById('loading').style.display = ''
 	document.getElementById('loadicon').style.display = ''
-	document.getElementById('loc').style.display = 'none'
-	iframe.style.display = 'none'
+	// document.getElementById('loc').style.display = 'none'
+	// iframe.style.display = 'none'
 	navigator.geolocation.getCurrentPosition(function(p) {
 		var locLat = p.coords.latitude
 		var locLon = p.coords.longitude
@@ -193,7 +194,8 @@ function getLocation(force) {
 				// console.log('geocode res', results)
 				document.getElementById('loading').style.display = 'none'
 				document.getElementById('loadicon').style.display = 'none'
-				iframe.style.display = 'inline'
+				showLinks()
+				// iframe.style.display = 'inline'
 				// var locName = results[0].formatted_address
 				var address = results[0].address_components
 				var locName = address[0].short_name + ' ' + address[1].short_name + ' in ' + address[3].short_name
@@ -346,26 +348,34 @@ function popList() {
 }
 
 // ********** PICTURE / IMG FILTER NOTES ******************************
-// also: lns 132, 180
 
+var allPicsClicked = false;
 document.getElementById('allpics').onclick = function() {
-	if (sessionStorage['*results']) {
-		var curr = document.getElementById('test')
-		curr.parentNode.removeChild(curr)
-		var photos = JSON.parse(sessionStorage['*results']).photourls
-		photos.forEach(function(x) {
-			// document.getElementById('allpics').innerHTML = photos.length
-			var img = document.createElement('IMG')
-			var newdiv = document.createElement('DIV')
-			img.src = x
-			img.style.margin = '5px'
-			document.getElementById('picdiv').appendChild(img)
-		}) 
+	if (!allPicsClicked) {
+		allPicsClicked = true;
+		if (sessionStorage['*results']) {
+			var photos = JSON.parse(sessionStorage['*results']).photourls
+			photos.forEach(function(x) {
+				var img = document.createElement('IMG')
+				img.src = x
+				img.style.margin = '5px'
+				document.getElementById('picdiv').appendChild(img)
+			})
+			document.getElementById('allpics').innerHTML = '&#9734&#9734&#9734 good find!'
+			setTimeout(function() {
+				document.getElementById('allpics').innerHTML = ''
+			}, 1500)
+		}
+		else {
+			document.getElementById('allpics').innerHTML = 'no pics'
+			setTimeout(function() {
+				document.getElementById('allpics').innerHTML = ''
+			}, 1000)
+		}
+	}
+	else {
+		return;
 	}
 }
 
-// document.getElementById('allpics').onclick = function() {
-// 	document.getElementById('saveLocbtn').style.color = 'blue'
-// }
-// backgroundColor, webkit filter
-// **********************************************************************
+// potential settings options -- background-color, img grayscale, img width/height, 
