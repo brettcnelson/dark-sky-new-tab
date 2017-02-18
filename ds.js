@@ -3,13 +3,13 @@ var deleteSaved = false
 document.getElementById('deleteSaved').onclick = function() {
 	if (deleteSaved) {
 		deleteSaved = false;
-		document.getElementById('deleteSaved').innerHTML = 'click to select a row to delete'
+		document.getElementById('deleteSaved').innerHTML = 'remove one'
 		var table = document.getElementById('savtable')
 		table.deleteRow(1)
 	}
 	else {
 		deleteSaved = true;
-		document.getElementById('deleteSaved').innerHTML = 'click here to stop delete selection'	
+		document.getElementById('deleteSaved').innerHTML = 'CANCEL'	
 		var table = document.getElementById('savtable')
 		var newRow = table.insertRow(1)
 		var newCell = newRow.insertCell(0)
@@ -21,7 +21,7 @@ document.getElementById('deleteSaved').onclick = function() {
 		newCell.appendChild(newDiv)
 		setTimeout(function() {
 			if (deleteSaved) {
-				document.getElementById('deleteSaved').innerHTML = 'click to select a row to delete'
+				document.getElementById('deleteSaved').innerHTML = 'remove one'
 				var table = document.getElementById('savtable')
 				table.deleteRow(1)
 				deleteSaved = false
@@ -177,7 +177,7 @@ function initAutocomplete() {
 function getLocation(force) {
 	if (force) {
 		hideLinks()
-		// document.getElementById('test').style.display = 'none'
+		document.getElementById('test').style.display = 'none'
 	}
 	sessionStorage.removeItem('*results')
 	document.getElementById('loading').style.display = ''
@@ -309,7 +309,7 @@ function popList() {
 				deleteSaved = false
 				var table = document.getElementById('savtable')
 				table.deleteRow(1)
-				document.getElementById('deleteSaved').innerHTML = 'click to select a row to delete'
+				document.getElementById('deleteSaved').innerHTML = 'remove one'
 				if (localStorage[this.innerHTML]) {
 					localStorage.removeItem(this.innerHTML)
 					localStorage.removeItem('*' + this.innerHTML)
@@ -346,21 +346,23 @@ function popList() {
 }
 
 // ********** PICTURE / IMG FILTER NOTES ******************************
-// also: lns 129, 177
+// also: lns 132, 180
 
-// document.getElementById('allpics').onclick = function() {
-// 	if (sessionStorage['*results']) {
-// 		var curr = document.getElementById('test')
-// 		curr.parentNode.removeChild(curr)
-// 		var photos = JSON.parse(sessionStorage['*results']).photourls
-// 		photos.forEach(function(x) {
-// 			document.getElementById('allpics').innerHTML = photos.length
-// 			var img = document.createElement('IMG')
-// 			img.src = x
-// 			document.getElementById('picdiv').appendChild(img)
-// 		}) 
-// 	}
-// }
+document.getElementById('allpics').onclick = function() {
+	if (sessionStorage['*results']) {
+		var curr = document.getElementById('test')
+		curr.parentNode.removeChild(curr)
+		var photos = JSON.parse(sessionStorage['*results']).photourls
+		photos.forEach(function(x) {
+			// document.getElementById('allpics').innerHTML = photos.length
+			var img = document.createElement('IMG')
+			var newdiv = document.createElement('DIV')
+			img.src = x
+			img.style.margin = '5px'
+			document.getElementById('picdiv').appendChild(img)
+		}) 
+	}
+}
 
 // document.getElementById('allpics').onclick = function() {
 // 	document.getElementById('saveLocbtn').style.color = 'blue'
