@@ -1,3 +1,6 @@
+var test;
+// test = true;
+
 var deleteSaved = false
 
 document.getElementById('deleteSaved').onclick = function() {
@@ -118,7 +121,21 @@ if (sessionStorage['*pending']) {
 	popList()
 }
 else {
-	getLocation()
+	if (test !== undefined) {
+		randCoords()
+	}
+	else {
+		getLocation()
+	}
+}
+
+function randCoords() {
+	var tpos = Math.random() < .5 ? 1 : -1
+	var gpos = Math.random() < .5 ? 1 : -1
+	var lat = (Math.random() * 90 * tpos).toFixed(4)
+	var lng = (Math.random() * 180 * gpos).toFixed(4)
+	iframe.src = "https://forecast.io/embed/#lat=" + lat + "&lon=" + lng + "&name=" + lat + ',' + lng
+	document.getElementById('testurl').href = 'http://maps.google.com/?q=' + lat + ',' + lng
 }
 
 if (sessionStorage['*results']) {
@@ -183,7 +200,7 @@ function getLocation(force) {
 	sessionStorage.removeItem('*results')
 	document.getElementById('loading').style.display = ''
 	document.getElementById('loadicon').style.display = ''
-	// document.getElementById('loc').style.display = 'none'
+	document.getElementById('loc').style.display = 'none'
 	// iframe.style.display = 'none'
 	navigator.geolocation.getCurrentPosition(function(p) {
 		var locLat = p.coords.latitude
@@ -192,9 +209,6 @@ function getLocation(force) {
 		geocoder.geocode({'location': {lat: locLat, lng: locLon}}, function(results, status) {
 			if (status === 'OK') {
 				// console.log('geocode res', results)
-				document.getElementById('loading').style.display = 'none'
-				document.getElementById('loadicon').style.display = 'none'
-				showLinks()
 				// iframe.style.display = 'inline'
 				// var locName = results[0].formatted_address
 				var address = results[0].address_components
@@ -202,6 +216,8 @@ function getLocation(force) {
 				iframe.src = "https://forecast.io/embed/#lat=" + locLat.toFixed(4) + "&lon=" + locLon.toFixed(4) + "&name=" + locName
 				sessionStorage.setItem(locName, iframe.src)
 				geosrc()
+				showLinks()
+				document.getElementById('loading').style.display = 'none'
 				if (force === true) {
 					sessionStorage['*pending'] = iframe.src
 					sessionStorage['*geocode'] = true
@@ -209,12 +225,12 @@ function getLocation(force) {
 				}
 				popList()
 			}
-			else {
-				console.log(status)
-			}
 		})
 	}, function(error) {
 			document.getElementById('loadicon').style.display = 'none'
+			document.getElementById('top-container').style.display = ''
+			document.getElementById('saveLocbtn').style.display = 'none'
+			popList()
 			console.log('err =', error)
 			var err = document.getElementById('error')
 			if (error.code === 1) {
@@ -353,7 +369,7 @@ var allPicsClicked = false;
 document.getElementById('allpics').onclick = function() {
 	if (!allPicsClicked) {
 		allPicsClicked = true;
-		if (sessionStorage['*results']) {
+		if (sessionStorage['*results'] && JSON.parse(sessionStorage['*results']).photourls) {
 			var photos = JSON.parse(sessionStorage['*results']).photourls
 			photos.forEach(function(x) {
 				var img = document.createElement('IMG')
@@ -361,7 +377,7 @@ document.getElementById('allpics').onclick = function() {
 				img.style.margin = '5px'
 				document.getElementById('picdiv').appendChild(img)
 			})
-			document.getElementById('allpics').innerHTML = '&#9734&#9734&#9734 good find!'
+			document.getElementById('allpics').innerHTML = '&#9889&#9889&#9889'
 			setTimeout(function() {
 				document.getElementById('allpics').innerHTML = ''
 			}, 1500)
@@ -378,4 +394,4 @@ document.getElementById('allpics').onclick = function() {
 	}
 }
 
-// potential settings options -- background-color, img grayscale, img width/height, 
+// potential settings options -- background-color, img grayscale, img width/height, iframe units

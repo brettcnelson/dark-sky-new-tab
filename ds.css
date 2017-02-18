@@ -31,7 +31,7 @@ button:hover {
 }
 
 /*#main {
-	
+
 }*/
 
 #headhead {
@@ -79,9 +79,9 @@ button:hover {
   /*color: white;*/
   outline:none;
   font-size:16px;
-  padding: 1px;
+  padding: 4px;
   background-color: #f7f7f7;
-  width: 63%;
+  width: 75%;
   display:block;
   margin: auto;
 }
@@ -184,6 +184,7 @@ tbody:hover tr:hover td {
 }
 
 #google-image img {
+	height:36px;
 	bottom:7px;
 	right:0;
 	position:absolute;
@@ -203,4 +204,5 @@ tbody:hover tr:hover td {
 #picdiv {
 	overflow:hidden;
 	padding:5px;
+	margin:0 0 20px 0;
 }
