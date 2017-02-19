@@ -20,10 +20,11 @@ img {
 
 button {
 	outline:none;
-	padding:3px;
+	/*padding:3px;*/
 	background-color:#f7f7f7;
 	border:2px solid #333333;
 	border-radius:17%;
+	font-weight: 550;
 }
 
 button:hover {
@@ -60,6 +61,20 @@ button:hover {
 	float:left;
 	width:24%;
 	margin:0 0 0 1%;
+}
+
+.conbtns {
+	height:30px;
+	width:44%;
+	margin:0 1% 0 0;
+}
+
+/*.conbtns.save {
+	width:40%;
+}*/
+
+.conbtns.show {
+	width:50%;
 }
 
 #prevsaved {
