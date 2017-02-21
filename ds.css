@@ -69,10 +69,6 @@ button:hover {
 	margin:0 1% 0 0;
 }
 
-/*.conbtns.save {
-	width:40%;
-}*/
-
 .conbtns.show {
 	width:50%;
 }
@@ -142,17 +138,6 @@ th {
 	text-shadow: 0 1px 0 #000;	
 }
 
-th:after {
-	/*content: '';*/
-	background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.08));
-	display: block;
-	height: 25%;
-	left: 0;
-	margin: 1px 0 0 0;
-	position: absolute;
-	top: 25%;
-}
-
 td {
 	border-right: 1px solid #fff;
 	border-left: 1px solid #e8e8e8;
@@ -199,7 +184,7 @@ tbody:hover tr:hover td {
 }
 
 #google-image img {
-	height:36px;
+	height:18px;
 	bottom:7px;
 	right:0;
 	position:absolute;

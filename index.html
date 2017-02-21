@@ -18,8 +18,8 @@
 
 			<div id="top-container">
 				<div id="button-container">
-					<button id="saveLocbtn" class="conbtns save">&#128274 save this place</button>
-					<button id="prevsaved" class="conbtns save">&#128274 saved</button>
+					<button id="saveLocbtn" class="conbtns save">&#9734 save this place</button>
+					<button id="prevsaved" class="conbtns save">&#9734 saved</button>
 					<button id="show-tables" class="conbtns show"></button>
 				</div>
 				<div id="search-container">
@@ -39,8 +39,8 @@
 					  <thead>
 					    <tr>
 					      <th id="deleteadd">Saved Places
-					      	<button id="remove">&#128163 remove all</button> or 
-					      	<button id="deleteSaved">remove one</button>
+					      	<div><button id="remove">&#128163 remove all</button> or 
+					      	<button id="deleteSaved">remove one</button></div>
 					  		</th>
 					    </tr>
 					  </thead>
@@ -51,7 +51,9 @@
 					<table id="rectable">
 					  <thead>
 					    <tr>
-					      <th><p style="display: inline-block;width:100%">Recent Searches</p><button style="float:right" id="clearrec">clear recent searches</button></th>
+					      <th>Recent Searches
+					      	<div><button id="clearrec">clear recent searches</button></div>
+					      </th>
 					    </tr>
 					  </thead>
 					  <tbody id="recent">
@@ -63,7 +65,7 @@
 					<div id="inner-google">
 						<a id="mapanch" class="links" target="_blank"></a>
 						<div id="google-image">
-							<img src="pbg.svg" style="height:18px">
+							<img src="pbg.svg">
 						</div>
 					</div>
 				</div>
@@ -73,11 +75,9 @@
 			
 			<div id="allpics" class="bottom"></div>
 
-			<a id="testurl" target="_blank" style="font-size:250%">&#127899</a>
+			<!-- <a id="testurl" target="_blank" style="font-size:250%">&#127899</a> -->
 
 			<div id="picdiv"></div>
-
-
 
 		<script type="text/javascript" id="info" async defer></script>
 		<script type="text/javascript" src="info.js"></script>

@@ -69,11 +69,9 @@ function geosrc() {
 	document.getElementById('dsanch').href = 'https://darksky.net/' + lat + ',' + lng
 	if (sessionStorage['*results']) {
 		var results = JSON.parse(sessionStorage['*results'])
-		var murl = results.url
-		var mtext = results.name + ' on google maps'
 		var mapAnch = document.getElementById('mapanch')
-		mapAnch.innerHTML = mtext
-		mapAnch.href = results.murl
+		mapAnch.innerHTML = results.name + ' on google maps'
+		mapAnch.href = results.url
 	}
 	if (!sessionStorage['*results']) {
 		var text = name + ' on google maps'
@@ -97,6 +95,19 @@ function getName() {
 }
 
 function popList() {
+
+	var currInLocal = false
+	for (var key in localStorage) {
+		if (!currInLocal && key === iframe.src.split('&name=')[1]) {
+			currInLocal = true
+			document.getElementById('saveLocbtn').style.display = 'none'
+			document.getElementById('prevsaved').style.display = '';		
+		}
+	}
+	if (!currInLocal) {
+		document.getElementById('saveLocbtn').style.display = ''
+		document.getElementById('prevsaved').style.display = 'none';	
+	}
 
 	function pop(id1, id2, storage) {
 		var table = document.getElementById(id1)
@@ -131,6 +142,7 @@ function popList() {
 				if (localStorage[this.innerHTML]) {
 					localStorage.removeItem(this.innerHTML)
 					localStorage.removeItem('*' + this.innerHTML)
+					updatePlaceCount()
 					popList()
 				}
 			}
@@ -140,6 +152,9 @@ function popList() {
 					newsrc = localStorage[this.innerHTML]
 					if (localStorage['*' + this.innerHTML]) {	
 						sessionStorage['*results'] = localStorage['*' + this.innerHTML]
+					}
+					else {
+						sessionStorage.removeItem('*results')
 					}
 				}
 				if (sessionStorage[this.innerHTML]) {
@@ -165,10 +180,10 @@ function popList() {
 function getLocation(force) {
 	hideLinks()
 	sessionStorage.removeItem('*results')
-	document.getElementById('loading').style.display = ''
+	var loading = document.getElementById('loading')
+	loading.style.display = ''
 	document.getElementById('loadicon').style.display = ''
 	document.getElementById('loc').style.display = 'none'
-	// iframe.style.display = 'none'
 	navigator.geolocation.getCurrentPosition(function(p) {
 		var locLat = p.coords.latitude
 		var locLon = p.coords.longitude
@@ -176,7 +191,6 @@ function getLocation(force) {
 		geocoder.geocode({'location': {lat: locLat, lng: locLon}}, function(results, status) {
 			if (status === 'OK') {
 				// console.log('geocode res', results)
-				// iframe.style.display = 'inline'
 				// var locName = results[0].formatted_address
 				var address = results[0].address_components
 				var locName = address[0].short_name + ' ' + address[1].short_name + ' in ' + address[3].short_name
@@ -184,8 +198,8 @@ function getLocation(force) {
 				sessionStorage.setItem(locName, iframe.src)
 				geosrc()
 				showLinks()
-				document.getElementById('loading').style.display = 'none'
-				if (force === true) {
+				loading.style.display = 'none'
+				if (force) {
 					sessionStorage['*pending'] = iframe.src
 					sessionStorage['*geocode'] = true
 					location.reload()
@@ -261,32 +275,34 @@ document.getElementById('loc').onclick = function () {
 	getLocation(true)
 }
 
+showTables.onclick = function() {
+	if (tables.style.display === 'none') {
+		tables.style.display = '';
+	}
+	else {
+		tables.style.display = 'none'	
+	}
+}
+
 document.getElementById('saveLocbtn').onclick = function () {
 	var name = iframe.src.split('&name=')[1]
 	if (name) {
 		localStorage.setItem(name, iframe.src)
-		sessionStorage.removeItem(name, iframe.src)
+		sessionStorage.removeItem(name)
 		if (sessionStorage['*' + name]) {
 			localStorage.setItem('*' + name, sessionStorage['*' + name])
-			sessionStorage.removeItem('*' + name, sessionStorage['*' + name])
+			sessionStorage.removeItem('*' + name)
 		}
-		var currInLocal = false
-		for (var key in localStorage) {
-			if (!currInLocal && key === name) {
-				currInLocal = true
-				document.getElementById('saveLocbtn').style.display = 'none'
-				document.getElementById('prevsaved').style.display = '';		
-			}
-		}
-		if (!currInLocal) {
-			document.getElementById('saveLocbtn').style.display = ''
-			document.getElementById('prevsaved').style.display = 'none';	
-		}
+		updatePlaceCount()
 		popList()
 	}
 	else {
 		alert('there is no current location to save')
 	}	
+}
+
+function updatePlaceCount() {
+	showTables.innerHTML = '&#128477 saved places: ' + getPlaces();
 }
 
 var deleteSaved = false
@@ -322,11 +338,13 @@ document.getElementById('deleteSaved').onclick = function() {
 
 document.getElementById('remove').onclick = function () {
 	localStorage.clear()
+	updatePlaceCount()
 	popList()
 }
 
 document.getElementById('clearrec').onclick = function () {
 	sessionStorage.clear()
+	updatePlaceCount()
 	popList()
 }
 
