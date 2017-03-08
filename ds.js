@@ -14,7 +14,7 @@ var tables = document.getElementById('tables')
 tables.style.display = 'none'
 
 var showTables = document.getElementById('show-tables')
-showTables.innerHTML = '&#128477 saved places: ' + getPlaces();
+showTables.innerHTML = 'saved places: ' + getPlaces();
 
 function getPlaces() {
 	var places = 0;
@@ -191,6 +191,7 @@ function getLocation(force) {
 		geocoder.geocode({'location': {lat: locLat, lng: locLon}}, function(results, status) {
 			if (status === 'OK') {
 				// console.log('geocode res', results)
+				// sessionStorage.setItem('*temp', JSON.stringify(results))
 				// var locName = results[0].formatted_address
 				var address = results[0].address_components
 				var locName = address[0].short_name + ' ' + address[1].short_name + ' in ' + address[3].short_name
@@ -302,7 +303,7 @@ document.getElementById('saveLocbtn').onclick = function () {
 }
 
 function updatePlaceCount() {
-	showTables.innerHTML = '&#128477 saved places: ' + getPlaces();
+	showTables.innerHTML = 'saved places: ' + getPlaces();
 }
 
 var deleteSaved = false
