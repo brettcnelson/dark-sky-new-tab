@@ -279,9 +279,13 @@ document.getElementById('loc').onclick = function () {
 showTables.onclick = function() {
 	if (tables.style.display === 'none') {
 		tables.style.display = '';
+		showTables.style.backgroundColor = '#333333'
+		showTables.style.color = '#f7f7f7'
 	}
 	else {
-		tables.style.display = 'none'	
+		tables.style.display = 'none'
+		showTables.style.backgroundColor = '#f7f7f7'
+		showTables.style.color = '#333333'
 	}
 }
 
