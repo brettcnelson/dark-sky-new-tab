@@ -20,7 +20,6 @@
 				<div id="button-container">
 					<button id="saveLocbtn" class="conbtns save">&#9734 save this place</button>
 					<button id="prevsaved" class="conbtns save">&#9734 saved</button>
-					<button id="show-tables" class="conbtns show"></button>
 				</div>
 				<div id="search-container">
 					<input id="locSearch" placeholder="&#9906">
@@ -38,8 +37,8 @@
 					<table id="savtable">
 					  <thead>
 					    <tr>
-					      <th id="deleteadd">Saved Places
-					      	<div><button id="remove">&#128163 remove all</button> or 
+					      <th id="deleteadd"><div style="float:left">&#9734  Saved Places</div>
+					      	<div style="float:right"><button id="remove">remove all</button> or 
 					      	<button id="deleteSaved">remove one</button></div>
 					  		</th>
 					    </tr>
@@ -51,8 +50,8 @@
 					<table id="rectable">
 					  <thead>
 					    <tr>
-					      <th>Recent Searches
-					      	<div><button id="clearrec">clear recent searches</button></div>
+					      <th><div style="float: left">&#9906  Recent Searches</div>
+					      <div style="float: right"><button id="clearrec">clear recent searches</button></div>
 					      </th>
 					    </tr>
 					  </thead>
@@ -78,6 +77,8 @@
 			<!-- <a id="testurl" target="_blank" style="font-size:250%">&#127899</a> -->
 
 			<div id="picdiv"></div>
+			<button id="show-tables" class="conbtns show"></button>
+
 
 		<script type="text/javascript" id="info" async defer></script>
 		<script type="text/javascript" src="info.js"></script>

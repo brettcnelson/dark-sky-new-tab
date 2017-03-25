@@ -24,7 +24,7 @@ button {
 	background-color:#f7f7f7;
 	border:2px solid #333333;
 	border-radius:17%;
-	font-weight: 550;
+	font-weight: bold;
 }
 
 button:hover {
@@ -63,15 +63,9 @@ button:hover {
 	margin:0 0 0 1%;
 }
 
-/*.conbtns {
-	height:30px;
-	width:100%;
-	margin:0 1% 0 0;
-}*/
-
-/*.conbtns.show {
-	width:50%;
-}*/
+.conbtns {
+	margin: 0 0 3% 0;
+}
 
 #prevsaved {
 	background-color: #333333;
