@@ -1,7 +1,6 @@
 var iframe = document.getElementById('forecast_embed')
 
-var loading = document.getElementById('loading')
-loading.style.display = 'none'
+document.getElementById('framecon').style.display = 'none'
 
 var locBtn = document.getElementById('loc')
 
@@ -14,20 +13,28 @@ var tables = document.getElementById('tables')
 tables.style.display = 'none'
 
 var showTables = document.getElementById('show-tables')
-showTables.innerHTML = 'saved places: ' + getPlaces();
+
+function updatePlaceCount() {
+	showTables.innerHTML = '\u2606 saved: ' + getPlaces()[0] + ' - recent: ' + getPlaces()[1];
+}
 
 function getPlaces() {
 	var places = 0;
+	var recent = 0;
 	for (var key in localStorage) {
 		if (key[0] !== '*') {
 			places++
 		}
 	}
-	return places
+	for (var key in sessionStorage) {
+		if (key[0] !== '*') {
+			recent++
+		}
+	}
+	return [places, recent]
 }
 
 // ************** SET DEFAULT NOTES ****************************
-
 // document.getElementById('default').onclick = function() {
 // 	// console.log(iframe.src, sessionStorage)
 // 	for (var key in sessionStorage) {
@@ -47,6 +54,7 @@ function getPlaces() {
 // change this to else if - if the above if statement is uncommented
 //*******************************************************************
 
+updatePlaceCount()
 if (sessionStorage['*pending']) {
 	if (sessionStorage['*geocode']) {
 		locBtn.style.display = 'none'
@@ -95,7 +103,6 @@ function getName() {
 }
 
 function popList() {
-
 	var currInLocal = false
 	for (var key in localStorage) {
 		if (!currInLocal && key === iframe.src.split('&name=')[1]) {
@@ -170,7 +177,6 @@ function popList() {
 					newsrc = iframe.src
 				}
 				sessionStorage['*pending'] = newsrc
-
 				location.reload()
 			}
 		}
@@ -180,9 +186,6 @@ function popList() {
 function getLocation(force) {
 	hideLinks()
 	sessionStorage.removeItem('*results')
-	var loading = document.getElementById('loading')
-	loading.style.display = ''
-	document.getElementById('loadicon').style.display = ''
 	document.getElementById('loc').style.display = 'none'
 	navigator.geolocation.getCurrentPosition(function(p) {
 		var locLat = p.coords.latitude
@@ -199,19 +202,17 @@ function getLocation(force) {
 				sessionStorage.setItem(locName, iframe.src)
 				geosrc()
 				showLinks()
-				loading.style.display = 'none'
 				if (force) {
 					sessionStorage['*pending'] = iframe.src
 					sessionStorage['*geocode'] = true
 					location.reload()
 				}
 				popList()
+				updatePlaceCount()
 			}
 		})
 	}, function(error) {
-			document.getElementById('loadicon').style.display = 'none'
 			document.getElementById('top-container').style.display = ''
-			document.getElementById('saveLocbtn').style.display = 'none'
 			popList()
 			console.log('err =', error)
 			var err = document.getElementById('error')
@@ -219,28 +220,29 @@ function getLocation(force) {
 				err.innerHTML = 'It loooks like you haven\'t enabled location permission.  Search for a location below'
 			}
 			if (error.code === 2) {
-				err.innerHTML = 'Your location is unavailable - check your connection or search for a location below'
+				err.innerHTML = 'For some reason your location is unavailable - is your wifi on? modem/router working?<br>Sometimes Chrome\'s location service goes down for a little while.<br>Just search for a location below<br>\u2193'
 			}
 			if (error.code === 3) {
 				err.innerHTML = 'The location search timed out.  Search for a location below'
 			}
+			document.getElementById('saveLocbtn').style.display = 'none'	
 	})
 }
 
 function hideLinks() {
 	var links = document.getElementsByClassName('links')
 	iframe.style.display = 'none'
+	document.getElementById('framecon').style.display = ''
 	links[0].style.display = 'none'
 	links[1].style.display = 'none'
-	document.getElementById('top-container').style.display = 'none'
 }
 
 function showLinks() {
 	var links = document.getElementsByClassName('links')
 	iframe.style.display = ''
+	document.getElementById('framecon').style.display = 'none'
 	links[0].style.display = ''
 	links[1].style.display = ''
-	document.getElementById('top-container').style.display = ''
 }
 
 function initAutocomplete() {
@@ -304,10 +306,6 @@ document.getElementById('saveLocbtn').onclick = function () {
 	else {
 		alert('there is no current location to save')
 	}	
-}
-
-function updatePlaceCount() {
-	showTables.innerHTML = 'saved places: ' + getPlaces();
 }
 
 var deleteSaved = false
@@ -374,14 +372,11 @@ document.getElementById('allpics').onclick = function() {
 			}, 1500)
 		}
 		else {
-			document.getElementById('allpics').innerHTML = 'no pics'
+			document.getElementById('allpics').innerHTML = 'search for a more general location'
 			setTimeout(function() {
 				document.getElementById('allpics').innerHTML = ''
 			}, 1000)
 		}
-	}
-	else {
-		return;
 	}
 }
 
