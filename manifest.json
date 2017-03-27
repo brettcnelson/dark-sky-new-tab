@@ -1,8 +1,8 @@
 {
 	"manifest_version": 2,
-	"name": "Dark Sky Weather New Tab",
-	"description": "A new tab weather page using Dark Sky data - location-based/searchable",
-	"version": "1.0.5",
+	"name": "Dark Sky Weather New Tab Page",
+	"description": "A new tab page using Dark Sky weather data - get the weather for your location automatically & search for anywhere else in the world",
+	"version": "1.0.6",
 		"chrome_url_overrides": {
 		"newtab": "index.html"
 	},

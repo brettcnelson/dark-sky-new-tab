@@ -1,21 +1,21 @@
-var iframe = document.getElementById('forecast_embed')
+var tables = document.getElementById('tables')
+tables.style.display = 'none'
 
 document.getElementById('framecon').style.display = 'none'
-
-var locBtn = document.getElementById('loc')
 
 var prevSaved = document.getElementById('prevsaved')
 prevSaved.style.display = 'none'
 
-document.getElementById('locSearch').focus()
+var iframe = document.getElementById('forecast_embed')
+var locBtn = document.getElementById('loc')
 
-var tables = document.getElementById('tables')
-tables.style.display = 'none'
+document.getElementById('locSearch').focus()
 
 var showTables = document.getElementById('show-tables')
 
 function updatePlaceCount() {
 	showTables.innerHTML = '\u2606 saved: ' + getPlaces()[0] + ' - recent: ' + getPlaces()[1];
+	setTimeout(storage, 100)
 }
 
 function getPlaces() {
@@ -105,7 +105,7 @@ function getName() {
 function popList() {
 	var currInLocal = false
 	for (var key in localStorage) {
-		if (!currInLocal && key === iframe.src.split('&name=')[1]) {
+		if (!currInLocal && (key === iframe.src.split('&name=')[1] || (sessionStorage['*results'] && key === JSON.parse(sessionStorage['*results']).formatted_address))) {
 			currInLocal = true
 			document.getElementById('saveLocbtn').style.display = 'none'
 			document.getElementById('prevsaved').style.display = '';		
@@ -180,6 +180,36 @@ function popList() {
 				location.reload()
 			}
 		}
+
+		el.onmouseover = function() {
+			var name;
+			if (localStorage['*' + this.innerHTML]) {
+				this.innerHTML = JSON.parse(localStorage['*' + this.innerHTML]).name
+			}
+			else if (sessionStorage['*' + this.innerHTML]) {
+				this.innerHTML = JSON.parse(sessionStorage['*' + this.innerHTML]).name
+			}
+		}
+
+		el.onmouseout = function() {
+			for (var key in localStorage) {
+				if (key[0] === '*') {
+					if (JSON.parse(localStorage[key]).name === this.innerHTML) {
+						this.innerHTML = JSON.parse(localStorage[key]).formatted_address
+						console.log(this.innerHTML)
+					}
+				}
+			}
+			for (var key in sessionStorage) {
+				if (key[0] === '*') {
+					if (JSON.parse(sessionStorage[key]).name === this.innerHTML) {
+						this.innerHTML = JSON.parse(sessionStorage[key]).formatted_address
+												console.log(this.innerHTML)
+
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -197,7 +227,8 @@ function getLocation(force) {
 				// sessionStorage.setItem('*temp', JSON.stringify(results))
 				// var locName = results[0].formatted_address
 				var address = results[0].address_components
-				var locName = address[0].short_name + ' ' + address[1].short_name + ' in ' + address[3].short_name
+				// var locName = address[0].short_name + ' ' + address[1].short_name + ' in ' + address[3].short_name
+				var locName = address[0].short_name + ' ' + address[1].short_name
 				iframe.src = "https://forecast.io/embed/#lat=" + locLat.toFixed(4) + "&lon=" + locLon.toFixed(4) + "&name=" + locName
 				sessionStorage.setItem(locName, iframe.src)
 				geosrc()
@@ -252,7 +283,6 @@ function initAutocomplete() {
 }
 
 function changeSrc() {
-	// var locName = document.getElementById('locSearch').value
 	var results = autocomplete.getPlace()
 	if (results.photos) {
 		var photourls = []
@@ -262,9 +292,10 @@ function changeSrc() {
 		results.photourls = photourls
 	}
 	var locName = results.formatted_address
+	var frameName = results.name
 	locLat = results.geometry.location.lat().toFixed(4)
 	locLon = results.geometry.location.lng().toFixed(4)
-	var url = "https://forecast.io/embed/#lat=" + locLat + "&lon=" + locLon + "&name=" + locName
+	var url = "https://forecast.io/embed/#lat=" + locLat + "&lon=" + locLon + "&name=" + frameName
 	sessionStorage['*pending'] = url
 	sessionStorage.setItem(locName, url)
 	sessionStorage.setItem('*' + locName, JSON.stringify(results))
@@ -292,13 +323,22 @@ showTables.onclick = function() {
 }
 
 document.getElementById('saveLocbtn').onclick = function () {
-	var name = iframe.src.split('&name=')[1]
+	var name;
+	if (sessionStorage['*results']) {
+		name = JSON.parse(sessionStorage['*results']).formatted_address
+	}
+	else {
+		name = iframe.src.split('&name=')[1]
+	}
 	if (name) {
 		localStorage.setItem(name, iframe.src)
 		sessionStorage.removeItem(name)
 		if (sessionStorage['*' + name]) {
 			localStorage.setItem('*' + name, sessionStorage['*' + name])
 			sessionStorage.removeItem('*' + name)
+		}
+		else if (sessionStorage['*results']) {
+			localStorage.setItem('*' + name, sessionStorage['*results'])
 		}
 		updatePlaceCount()
 		popList()
@@ -307,6 +347,21 @@ document.getElementById('saveLocbtn').onclick = function () {
 		alert('there is no current location to save')
 	}	
 }
+
+document.getElementById('prevsaved').onclick = function () {
+	for (var key in localStorage) {
+		if (localStorage[key] === iframe.src) {
+			localStorage.removeItem(key)
+			var starred = '*' + key
+			if (localStorage[starred]) {
+				localStorage.removeItem(starred)
+			}
+		}
+	}
+	updatePlaceCount()
+	popList()
+}
+
 
 var deleteSaved = false
 document.getElementById('deleteSaved').onclick = function() {
@@ -346,15 +401,24 @@ document.getElementById('remove').onclick = function () {
 }
 
 document.getElementById('clearrec').onclick = function () {
-	sessionStorage.clear()
+	// sessionStorage.clear()
+	for (var key in sessionStorage) {
+		if (key !== '*results') {
+			sessionStorage.removeItem(key)
+		}
+	}
 	updatePlaceCount()
 	popList()
 }
 
+document.getElementById('allpics').onmouseover = function() {
+	if (sessionStorage['*results'] && JSON.parse(sessionStorage['*results']).photourls) {
+		this.style.cursor = 's-resize'
+	}
+}
+
 // ********** PICTURE / IMG FILTER NOTES ******************************
-
 var allPicsClicked = false;
-
 document.getElementById('allpics').onclick = function() {
 	if (!allPicsClicked) {
 		allPicsClicked = true;
@@ -371,27 +435,8 @@ document.getElementById('allpics').onclick = function() {
 				document.getElementById('allpics').innerHTML = ''
 			}, 1500)
 		}
-		else {
-			document.getElementById('allpics').innerHTML = 'search for a more general location'
-			setTimeout(function() {
-				document.getElementById('allpics').innerHTML = ''
-			}, 1000)
-		}
 	}
 }
-
-// TEST *********************************************************
-// var test;
-// test = true;
-
-// function randCoords() {
-// 	var tpos = Math.random() < .5 ? 1 : -1
-// 	var gpos = Math.random() < .5 ? 1 : -1
-// 	var lat = (Math.random() * 90 * tpos).toFixed(4)
-// 	var lng = (Math.random() * 180 * gpos).toFixed(4)
-// 	iframe.src = "https://forecast.io/embed/#lat=" + lat + "&lon=" + lng + "&name=" + lat + ',' + lng
-// 	document.getElementById('testurl').href = 'http://maps.google.com/?q=' + lat + ',' + lng
-// }
 
 // SETTINGS **************************************************************
 // potential settings options -- background-color, img grayscale, img width/height, iframe units

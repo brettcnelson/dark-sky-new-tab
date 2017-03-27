@@ -20,7 +20,7 @@ img {
 
 button {
 	outline:none;
-	padding:5px;
+	padding:3px;
 	background-color:#f7f7f7;
 	border:2px solid #333333;
 	border-radius:15%;
@@ -82,7 +82,7 @@ button:hover {
   font-size:16px;
   padding: 4px;
   background-color: #f7f7f7;
-  width: 75%;
+  width: 96%;
   display:block;
   margin: auto;
 }
@@ -93,7 +93,7 @@ button:hover {
 
 #tables {
 	float:left;
-	width:50%;
+	width:34%;
 }
 
 table {
@@ -104,7 +104,7 @@ table {
 	line-height: 12px;
 	margin: 8px auto;
 	text-align: left;
-	width: 67%;
+	width: 100%;
 	color: #f7f7f7;
 }	
 
@@ -120,7 +120,8 @@ th {
   font-weight: bold;
 	padding: 8px 8px;
 	position: relative;
-	text-shadow: 0 1px 0 #000;	
+	text-shadow: 0 1px 0 #000;
+	font-size: 120%;
 }
 
 td {
@@ -128,7 +129,7 @@ td {
 	border-left: 1px solid #e8e8e8;
 	border-top: 1px solid #fff;
 	border-bottom: 1px solid #e8e8e8;
-	padding: 8px 8px;
+	padding: 5px;
 	position: relative;
 	transition: all 300ms;
 }	
@@ -144,7 +145,7 @@ tbody:hover tr:hover td {
 }
 
 #ds {
-	width:24%;
+	width:32%;
 	margin:20px 0 0 1%;
 	float:left;
 }
@@ -154,7 +155,7 @@ tbody:hover tr:hover td {
 }
 
 #google {
-	width:24%;
+	width:32%;
 	float:right;
 	margin:20px 1% 0 0;
 }
@@ -180,10 +181,6 @@ tbody:hover tr:hover td {
 	background-color: #333333;
 	margin: 0 0 5px 0;
 	color:#f7f7f7;
-}
-
-.bottom:hover {
-	cursor:s-resize;
 }
 
 #picdiv {
