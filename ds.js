@@ -180,36 +180,6 @@ function popList() {
 				location.reload()
 			}
 		}
-
-		el.onmouseover = function() {
-			var name;
-			if (localStorage['*' + this.innerHTML]) {
-				this.innerHTML = JSON.parse(localStorage['*' + this.innerHTML]).name
-			}
-			else if (sessionStorage['*' + this.innerHTML]) {
-				this.innerHTML = JSON.parse(sessionStorage['*' + this.innerHTML]).name
-			}
-		}
-
-		el.onmouseout = function() {
-			for (var key in localStorage) {
-				if (key[0] === '*') {
-					if (JSON.parse(localStorage[key]).name === this.innerHTML) {
-						this.innerHTML = JSON.parse(localStorage[key]).formatted_address
-						console.log(this.innerHTML)
-					}
-				}
-			}
-			for (var key in sessionStorage) {
-				if (key[0] === '*') {
-					if (JSON.parse(sessionStorage[key]).name === this.innerHTML) {
-						this.innerHTML = JSON.parse(sessionStorage[key]).formatted_address
-												console.log(this.innerHTML)
-
-					}
-				}
-			}
-		}
 	}
 }
 
