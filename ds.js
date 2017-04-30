@@ -14,8 +14,9 @@ document.getElementById('locSearch').focus()
 var showTables = document.getElementById('show-tables')
 
 function updatePlaceCount() {
-	showTables.innerHTML = '\u2606 saved: ' + getPlaces()[0] + ' - recent: ' + getPlaces()[1];
-	setTimeout(storage, 100)
+	showTables.innerHTML = '\u2606: ' + getPlaces()[0];
+	// + ' -- \u26b2 : ' + getPlaces()[1];
+	// setTimeout(showStorage, 100)
 }
 
 function getPlaces() {
@@ -78,11 +79,11 @@ function geosrc() {
 	if (sessionStorage['*results']) {
 		var results = JSON.parse(sessionStorage['*results'])
 		var mapAnch = document.getElementById('mapanch')
-		mapAnch.innerHTML = results.name + ' on google maps'
+		mapAnch.innerHTML = results.name + ' on Google Maps'
 		mapAnch.href = results.url
 	}
 	if (!sessionStorage['*results']) {
-		var text = name + ' on google maps'
+		var text = name + ' on Google Maps'
 		var url = 'http://maps.google.com/?q=' + lat + ',' + lng
 		document.getElementById('mapanch').innerHTML = text
 		document.getElementById('mapanch').href = url
@@ -277,6 +278,7 @@ function changeSrc() {
 
 document.getElementById('loc').onclick = function () {
 	getLocation(true)
+	// location.reload()
 }
 
 showTables.onclick = function() {
@@ -342,25 +344,27 @@ document.getElementById('deleteSaved').onclick = function() {
 		table.deleteRow(1)
 	}
 	else {
-		deleteSaved = true;
-		document.getElementById('deleteSaved').innerHTML = 'CANCEL'	
-		var table = document.getElementById('savtable')
-		var newRow = table.insertRow(1)
-		var newCell = newRow.insertCell(0)
-		var newDiv = document.createElement('DIV')
-		newDiv.innerHTML = '< CLICK ON A ROW TO DELETE IT >'
-		newDiv.style.textAlign = 'center'
-		newDiv.style.color = 'black'
-		newDiv.style.backgroundColor = '#f7f7f7'
-		newCell.appendChild(newDiv)
-		setTimeout(function() {
-			if (deleteSaved) {
-				document.getElementById('deleteSaved').innerHTML = 'remove one'
-				var table = document.getElementById('savtable')
-				table.deleteRow(1)
-				deleteSaved = false
-			}
-		}, 10000)
+		if (localStorage.length) {
+			deleteSaved = true;
+			document.getElementById('deleteSaved').innerHTML = 'CANCEL'	
+			var table = document.getElementById('savtable')
+			var newRow = table.insertRow(1)
+			var newCell = newRow.insertCell(0)
+			var newDiv = document.createElement('DIV')
+			newDiv.innerHTML = '< CLICK ON A ROW TO DELETE IT >'
+			newDiv.style.textAlign = 'center'
+			newDiv.style.color = 'black'
+			newDiv.style.backgroundColor = '#f7f7f7'
+			newCell.appendChild(newDiv)
+			setTimeout(function() {
+				if (deleteSaved) {
+					document.getElementById('deleteSaved').innerHTML = 'remove one'
+					var table = document.getElementById('savtable')
+					table.deleteRow(1)
+					deleteSaved = false
+				}
+			}, 10000)
+		}
 	}
 }
 
@@ -371,7 +375,6 @@ document.getElementById('remove').onclick = function () {
 }
 
 document.getElementById('clearrec').onclick = function () {
-	// sessionStorage.clear()
 	for (var key in sessionStorage) {
 		if (key !== '*results') {
 			sessionStorage.removeItem(key)
