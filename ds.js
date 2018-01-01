@@ -23,12 +23,12 @@ function getPlaces() {
 	var places = 0;
 	var recent = 0;
 	for (var key in localStorage) {
-		if (key[0] !== '*') {
+		if (key[0] !== '*' && key !== 'length' && typeof localStorage[key] !== 'function') {
 			places++
 		}
 	}
 	for (var key in sessionStorage) {
-		if (key[0] !== '*') {
+		if (key[0] !== '*' && key !== 'length' && typeof sessionStorage[key] !== 'function') {
 			recent++
 		}
 	}
@@ -123,7 +123,8 @@ function popList() {
 			table.deleteRow(0)
 		}
 		for (var key in storage) {
-			if (key[0] !== '*') {
+			if (key[0] !== '*' && key !== 'length' && typeof storage[key] !== 'function') {
+				console.log(key)
 				var newRow = table.insertRow(table.rows.length)
 				var newCell = newRow.insertCell(0)
 				var newText = document.createTextNode(key)
