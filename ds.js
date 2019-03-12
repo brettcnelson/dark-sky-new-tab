@@ -1,3 +1,4 @@
+google.maps.event.addDomListener(window, 'load', initAutocomplete);
 var tables = document.getElementById('tables')
 tables.style.display = 'none'
 
@@ -97,7 +98,7 @@ function getName() {
 			name = JSON.parse(sessionStorage['*results']).name
 		}
 		else {
-			name = iframe.src.split('&name=')[1]	
+			name = iframe.src.split('&name=')[1].replace(/%20/gi,' ')
 		}
 	}
 	return name;
@@ -295,13 +296,13 @@ showTables.onclick = function() {
 }
 
 document.getElementById('saveLocbtn').onclick = function () {
-	var name;
-	if (sessionStorage['*results']) {
-		name = JSON.parse(sessionStorage['*results']).formatted_address
-	}
-	else {
-		name = iframe.src.split('&name=')[1]
-	}
+	var name = getName();
+	// if (sessionStorage['*results']) {
+	// 	name = JSON.parse(sessionStorage['*results']).formatted_address
+	// }
+	// else {
+	// 	name = iframe.src.split('&name=')[1]
+	// }
 	if (name) {
 		localStorage.setItem(name, iframe.src)
 		sessionStorage.removeItem(name)
@@ -413,3 +414,46 @@ document.getElementById('allpics').onclick = function() {
 
 // SETTINGS **************************************************************
 // potential settings options -- background-color, img grayscale, img width/height, iframe units
+
+// You can change the font from the default Helvetica, the color of the temperature bars, and the localization of the units (‘us’ for Fahrenheit and mph, ‘uk’ for Celsius and mph, ‘ca’ for Celsius and km/h, and ‘si’ for Celsius and m/s).
+
+// function showStorage() {
+// 	var lsobj = {local: [], iframes: []}
+// 	for (var key in localStorage) {
+// 		if (localStorage[key][0] === 'h') {
+// 			lsobj.iframes.push(key)
+// 		}
+// 		else {
+// 			lsobj.local.push(key)
+// 			lsobj[key] = JSON.parse(localStorage[key])
+// 		}
+// 	}
+
+// 	var ssobj = {session: [], iframes: []}
+// 	for (var key in sessionStorage) {
+// 		if (sessionStorage[key][0] === 'h') {
+// 			ssobj.iframes.push(key)
+// 		}
+// 		else {
+// 			ssobj.session.push(key)
+// 			ssobj[key] = JSON.parse(sessionStorage[key])	
+// 		}
+// 	}
+// 	document.getElementById('local').innerHTML = JSON.stringify(lsobj, null, 2)
+// 	document.getElementById('session').innerHTML = JSON.stringify(ssobj, null, 2)
+// }
+
+// TEST *********************************************************
+// function randCoords() {
+// 	console.log('randcoords')
+// 	var tpos = Math.random() < .5 ? 1 : -1
+// 	var gpos = Math.random() < .5 ? 1 : -1
+// 	var lat = (Math.random() * 90 * tpos).toFixed(4)
+// 	var lng = (Math.random() * 180 * gpos).toFixed(4)
+// 	var iframe = document.getElementById('forecast_embed')
+// 	iframe.src = "https://forecast.io/embed/#lat=" + lat + "&lon=" + lng + "&name=" + lat + ',' + lng
+// 	document.getElementById('testurl').href = 'http://maps.google.com/?q=' + lat + ',' + lng
+// }
+
+// randCoords()
+// ****************************************************************
