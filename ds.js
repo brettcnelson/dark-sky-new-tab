@@ -1,12 +1,6 @@
 google.maps.event.addDomListener(window, 'load', initAutocomplete);
 var tables = document.getElementById('tables')
-tables.style.display = 'none'
-
-document.getElementById('framecon').style.display = 'none'
-
 var prevSaved = document.getElementById('prevsaved')
-prevSaved.style.display = 'none'
-
 var iframe = document.getElementById('forecast_embed')
 var locBtn = document.getElementById('loc')
 
@@ -16,8 +10,6 @@ var showTables = document.getElementById('show-tables')
 
 function updatePlaceCount() {
 	showTables.innerHTML = '\u2606: ' + getPlaces()[0];
-	// + ' -- \u26b2 : ' + getPlaces()[1];
-	// setTimeout(showStorage, 100)
 }
 
 function getPlaces() {
@@ -77,17 +69,22 @@ function geosrc() {
 	var lat = iframe.src.split('=')[1].split('&')[0]
 	var lng = iframe.src.split('&lon=')[1].split('&')[0]
 	document.getElementById('dsanch').href = 'https://darksky.net/' + lat + ',' + lng
+	var mapAnch = document.getElementById('mapanch')
 	if (sessionStorage['*results']) {
 		var results = JSON.parse(sessionStorage['*results'])
-		var mapAnch = document.getElementById('mapanch')
 		mapAnch.innerHTML = results.name + ' on Google Maps'
 		mapAnch.href = results.url
+		var pictop = document.getElementById('pictop')
+		pictop.innerHTML = '&#9889'
+		setTimeout(function() {
+			pictop.innerHTML = ''
+		}, 2000)
 	}
-	if (!sessionStorage['*results']) {
+	else {
 		var text = name + ' on Google Maps'
 		var url = 'http://maps.google.com/?q=' + lat + ',' + lng
-		document.getElementById('mapanch').innerHTML = text
-		document.getElementById('mapanch').href = url
+		mapAnch.innerHTML = text
+		mapAnch.href = url
 	}
 }
 
@@ -195,11 +192,7 @@ function getLocation(force) {
 		var geocoder = new google.maps.Geocoder
 		geocoder.geocode({'location': {lat: locLat, lng: locLon}}, function(results, status) {
 			if (status === 'OK') {
-				// console.log('geocode res', results)
-				// sessionStorage.setItem('*temp', JSON.stringify(results))
-				// var locName = results[0].formatted_address
 				var address = results[0].address_components
-				// var locName = address[0].short_name + ' ' + address[1].short_name + ' in ' + address[3].short_name
 				var locName = address[0].short_name + ' ' + address[1].short_name
 				iframe.src = "https://forecast.io/embed/#lat=" + locLat.toFixed(4) + "&lon=" + locLon.toFixed(4) + "&name=" + locName
 				sessionStorage.setItem(locName, iframe.src)
@@ -279,7 +272,6 @@ function changeSrc() {
 
 document.getElementById('loc').onclick = function () {
 	getLocation(true)
-	// location.reload()
 }
 
 showTables.onclick = function() {
@@ -297,12 +289,6 @@ showTables.onclick = function() {
 
 document.getElementById('saveLocbtn').onclick = function () {
 	var name = getName();
-	// if (sessionStorage['*results']) {
-	// 	name = JSON.parse(sessionStorage['*results']).formatted_address
-	// }
-	// else {
-	// 	name = iframe.src.split('&name=')[1]
-	// }
 	if (name) {
 		localStorage.setItem(name, iframe.src)
 		sessionStorage.removeItem(name)
@@ -385,32 +371,37 @@ document.getElementById('clearrec').onclick = function () {
 	popList()
 }
 
-document.getElementById('allpics').onmouseover = function() {
+document.getElementById('pictop').onmouseover = function() {
 	if (sessionStorage['*results'] && JSON.parse(sessionStorage['*results']).photourls) {
 		this.style.cursor = 's-resize'
 	}
 }
 
 // ********** PICTURE / IMG FILTER NOTES ******************************
-var allPicsClicked = false;
-document.getElementById('allpics').onclick = function() {
-	if (!allPicsClicked) {
-		allPicsClicked = true;
-		if (sessionStorage['*results'] && JSON.parse(sessionStorage['*results']).photourls) {
-			var photos = JSON.parse(sessionStorage['*results']).photourls
-			photos.forEach(function(x) {
-				var img = document.createElement('IMG')
-				img.src = x
-				img.style.margin = '5px'
-				document.getElementById('picdiv').appendChild(img)
-			})
-			document.getElementById('allpics').innerHTML = '&#9889'
-			setTimeout(function() {
-				document.getElementById('allpics').innerHTML = ''
-			}, 1500)
+document.getElementById('pictop').onclick = (function() {
+	var clicked = false;
+	var show = false;
+	var pics = document.getElementById('pics')
+	return function() {
+		if (!clicked) {
+			clicked = true;
+			show = true;
+			if (sessionStorage['*results'] && JSON.parse(sessionStorage['*results']).photourls) {
+				var photos = JSON.parse(sessionStorage['*results']).photourls
+				photos.forEach(function(x) {
+					var img = document.createElement('IMG')
+					img.src = x
+					img.style.margin = '5px'
+					pics.appendChild(img)
+				})
+			}
+		}
+		else {
+			show = !show;
+			pics.style.display = pics.style.display ? '' : 'none'
 		}
 	}
-}
+}());
 
 // SETTINGS **************************************************************
 // potential settings options -- background-color, img grayscale, img width/height, iframe units
