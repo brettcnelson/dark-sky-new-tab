@@ -5,73 +5,78 @@
 		<link href="ds.css" rel="stylesheet">
 	</head>
 	<body>
-		<!-- <div id="main"> -->
-			<div id="headhead"></div>
-			<a id="head" href="https://darksky.net/" target="_blank"><img id="pic" src="pbds.svg"></a>
-			<iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src=""></iframe>
- 			<div id="framecon" style="height:245px;display:none">
- 				<div class="stormy"></div>
- 				<div><p id="error" style="font-weight: bold; font-size: 14px; text-align:center; padding-top:5%">Loading...</p></div>
- 			</div>
-
-			<div id="top-container">
-				<div id="button-container">
-					<button id="show-tables" style="float:left"></button>
-					<button id="saveLocbtn" style="float:left">&#9734 save this place</button>
-					<button id="prevsaved" style="float:left; display:none">&#9734 saved</button>
-				</div>
-				<div id="search-container">
-					<input id="locSearch" placeholder="&#9906">
-				</div>
-				<button id="loc">&#9447 get your location</button>
+		<script src="jscolor.js"></script>
+		<div id="headhead"></div>
+		<a id="head" href="https://darksky.net/" target="_blank"><img id="pic" src="pbds.svg"></a>
+		<iframe id="forecast_embed" type="text/html" frameborder="0" height="245" width="100%" src=""></iframe>
+			<div id="framecon" style="height:245px;display:none">
+				<div class="stormy"></div>
+				<div><p id="error" style="font-weight: bold; font-size: 14px; text-align:center; padding-top:5%">Loading...</p></div>
 			</div>
 
-			<div id="bottom-container">
-				<div id="ds">
-					<a id="dsanch" class="links" target="_blank" href=""></a>
-					<div><img src="dsfoot.svg"></div>
-				</div>
+		<div id="top-container">
+			<div id="button-container">
+				<button id="show-tables" style="float:left"></button>
+				<button id="saveLocbtn" style="float:left">&#9734 save this place</button>
+				<button id="prevsaved" style="float:left; display:none">&#9734 saved</button>
+			</div>
+			<div id="search-container">
+				<input id="locSearch" placeholder="&#9906">
+			</div>
+			<button id="loc">&#9447 get your location</button>
+		</div>
 
-				<div id="tables" style="display:none">
-					<table id="savtable">
-					  <thead>
-					    <tr>
-					      <th id="deleteadd"><div style="float:left">&#9734  Saved Places</div>
-					      	<div style="float:right"><button id="remove">remove all</button> or 
-					      	<button id="deleteSaved">remove one</button></div>
-					  		</th>
-					    </tr>
-					  </thead>
-					  <tbody id="saved">
-					  </tbody>
-					</table>
+		<div id="bottom-container">
+			<div id="ds">
+				<a id="dsanch" class="links" target="_blank" href=""></a>
+				<div><img src="dsfoot.svg"></div>
+			</div>
 
-					<table id="rectable">
-					  <thead>
-					    <tr>
-					      <th><div style="float: left">&#9906  Recent Searches</div>
-					      <div style="float: right"><button id="clearrec">clear recent searches</button></div>
-					      </th>
-					    </tr>
-					  </thead>
-					  <tbody id="recent">
-					  </tbody>
-					</table>
-				</div>
+			<div id="tables" style="display:none">
+				<table id="savtable">
+				  <thead>
+				    <tr>
+				      <th id="deleteadd"><div style="float:left">&#9734  Saved Places</div>
+				      	<div style="float:right"><button id="remove">remove all</button> or 
+				      	<button id="deleteSaved">remove one</button></div>
+				  		</th>
+				    </tr>
+				  </thead>
+				  <tbody id="saved">
+				  </tbody>
+				</table>
 
-				<div id="google">
-					<div id="inner-google">
-						<a id="mapanch" class="links" target="_blank"></a>
-						<div id="google-image">
-							<img src="pbg.svg">
-						</div>
+				<table id="rectable">
+				  <thead>
+				    <tr>
+				      <th><div style="float: left">&#9906  Recent Searches</div>
+				      <div style="float: right"><button id="clearrec">clear recent searches</button></div>
+				      </th>
+				    </tr>
+				  </thead>
+				  <tbody id="recent">
+				  </tbody>
+				</table>
+			</div>
+
+			<div id="google">
+				<div id="inner-google">
+					<a id="mapanch" class="links" target="_blank"></a>
+					<div id="google-image">
+						<img src="pbg.svg">
 					</div>
 				</div>
 			</div>
-		<!-- </div> -->
+		</div>
 			
 		<div id="pictop"></div>
-		<div id="pics" style="margin-bottom:20px">
+		<div id="pics" style="margin-bottom:20px"></div>
+		<div id="options">options
+			<button id="defaults">reset all options to default</button>
+			<div>Background Color: <input id="jscol" class="jscolor"><button id="colordefault">default</button></div>
+			<div>Widget Units: </div>
+			<div>Widget Bar Color: </div>
+		</div>
 
 		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDsj94cAP9WAyLVZs1CCYt79cYGCAkQge4&libraries=places"></script>
  		<script type="text/javascript" src="ds.js"></script>
