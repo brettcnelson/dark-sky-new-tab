@@ -8,19 +8,20 @@ var prevSaved = document.getElementById('prevsaved');
 var iframe = document.getElementById('forecast_embed');
 var locBtn = document.getElementById('loc');
 var showTables = document.getElementById('show-tables');
-var defaults = {backgroundColor: '#9C9C9C',font: 'Helvetica',units: '',color: ''};
+var defaults = {backgroundColor: '#9C9C9C',font: 'Helvetica',units: '',color: '#333333'};
 document.getElementById('colordefault').style.backgroundColor = defaults.backgroundColor;
+document.getElementById('colorbar').style.backgroundColor = defaults.color;
 var options;
 var data = {};
 var state = {deleteSaved:false};
 chrome.storage.sync.get(defaults, (opts) => {
+	updatePlaceCount();
 	setOptions(opts);
 	document.getElementById('locSearch').focus();
 	if (!sessionStorage['*pending']) {
 		getLocation();
 	}
 	else {
-		updatePlaceCount();
 		if (sessionStorage['*results']) {
 			data.name = JSON.parse(sessionStorage['*results']).name;
 		}
@@ -40,11 +41,6 @@ chrome.storage.sync.get(defaults, (opts) => {
 		}
 	}
 });
-
-
-// no iframe, pending AND results, pending AND no results
-
-
 
 // FUNCTIONS ***************************
 
@@ -98,7 +94,8 @@ function getLocation(force) {
 				}
 				iframe.src = `${src}&color=${options.color}&font=${options.font}&units=${options.units}`;
 				geosrc(data.name);
-				showLinks();
+				iframe.style.display = '';
+				document.getElementById('framecon').style.display = 'none';
 				popList();
 				updatePlaceCount();
 			}
@@ -141,21 +138,6 @@ function geosrc(name) {
 		mapAnch.innerHTML = name + ' on Google Maps';
 		mapAnch.href = 'http://maps.google.com/?q=' + lat + ',' + lng;
 	}
-}
-
-function showLinks() {
-// 	var links = document.getElementsByClassName('links')
-	iframe.style.display = ''
-	document.getElementById('framecon').style.display = 'none'
-// 	links[0].style.display = ''
-// 	links[1].style.display = ''
-
-// 	//hl
-// 		// var links = document.getElementsByClassName('links');
-// 	// iframe.style.display = 'none';
-// 	// document.getElementById('framecon').style.display = '';
-// 	// links[0].style.display = 'none';
-// 	// links[1].style.display = 'none';
 }
 
 function popList() {
@@ -239,7 +221,7 @@ function popList() {
 }
 
 function updatePlaceCount() {
-	showTables.innerHTML = '\u2606: ' + getPlaces()[0];
+	showTables.innerHTML = '\u2606: ' + (getPlaces()[0]||'');
 }
 
 function getPlaces() {
@@ -281,7 +263,7 @@ document.getElementById('saveLocbtn').onclick = function () {
 	var name = data.name;
 	if (name) {
 		localStorage.setItem(name, iframe.src.split('&color')[0]);
-		sessionStorage.removeItem(name)
+		sessionStorage.removeItem(name);
 		if (sessionStorage['*' + name]) {
 			localStorage.setItem('*' + name, sessionStorage['*' + name])
 			sessionStorage.removeItem('*' + name)
@@ -364,7 +346,7 @@ document.getElementById('pictop').onmouseover = function() {
 }
 
 document.getElementById('defaults').onclick = function() {
-	chrome.storage.sync.set(defaults,()=>{
+	chrome.storage.sync.set(defaults,() => {
 		chrome.storage.sync.get(defaults,setOptions);
 	});
 }
@@ -375,6 +357,10 @@ document.getElementById('jscol').onchange = function(e) {
 
 document.getElementById('colordefault').onclick = function() {
 	chrome.storage.sync.set({backgroundColor:defaults.backgroundColor},()=>chrome.storage.sync.get(defaults,setOptions));
+}
+
+document.getElementById('jscolbar').onchange = function(e) {
+	chrome.storage.sync.set({color:`#${e.target.value}`},()=>chrome.storage.sync.get(defaults,setOptions));
 }
 
 // ********** PICTURE / IMG FILTER NOTES ******************************
