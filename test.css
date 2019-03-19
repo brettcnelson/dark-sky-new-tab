@@ -16,10 +16,6 @@ img {
   -webkit-filter: grayscale(1);
 }
 
-button {
-
-}
-
 button:hover {
 	cursor:pointer;
 }
@@ -45,6 +41,7 @@ button:hover {
 	display:grid;
 	grid-template-columns:1fr 2fr 1fr;
 	margin-top:10px;
+	height:100px;
 }
 
 #prevsaved {
@@ -60,7 +57,11 @@ button:hover {
   font-size:16px;
   background-color: #f7f7f7; 
   width:50%;
-  padding-left:5px;
+  padding-left:5px;;
+}
+
+#ds {
+	margin-left:10px;
 }
 
 #ds img {
@@ -68,6 +69,7 @@ button:hover {
 }
 
 #google {
+	margin-right:10px;
 	text-align:right;
 }
 
@@ -91,8 +93,8 @@ button:hover {
 }
 
 #pictop {
-	height:20px;
-	background:#333333;
+	border-top:10px solid #333333;
+	border-bottom:10px solid #333333;
 }
 
 .stormy {
