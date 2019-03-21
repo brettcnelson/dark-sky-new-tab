@@ -4,7 +4,7 @@
 	"description": "A new tab page using Dark Sky weather data",
 	"version": "2.0",
 		"chrome_url_overrides": {
-		"newtab": "test.html"
+		"newtab": "index.html"
 	},
 	"icons": {"128": "icon.png"},
 	"permissions": [
