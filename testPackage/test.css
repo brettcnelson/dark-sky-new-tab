@@ -4,10 +4,7 @@ body {
 	margin:0;
 	padding:0;
 	font-size:1em;
-}
-
-a {
-	color:#333333;
+	font-family:Helvetica;
 }
 
 img {
@@ -41,7 +38,12 @@ button:hover {
 	display:grid;
 	grid-template-columns:1fr 2fr 1fr;
 	margin-top:10px;
-	height:100px;
+	padding-bottom:3px;
+}
+
+.midbuttons {
+	border-radius:50%;
+	border:1px solid #333333;
 }
 
 #prevsaved {
@@ -73,28 +75,53 @@ button:hover {
 	text-align:right;
 }
 
-/*#svgcon {
-	position:relative;
-}
-
-#svglink {
-	position:absolute;
-	top:50%;
-	transform:translateY(-50%);
-}*/
-
 #google img {
 	height:18px;
 }
 
+.links {
+	color:#333333;
+	font-weight:bold;
+}
+
 #tables {
-	font-size:.5em;
-	border:1px solid black;
+	grid-template-columns:1fr 1fr;
+	margin:0 3px% 0 3px;
+}
+
+.table {
+	background:#333333;
+	color:#f7f7f7;
+	padding:1% 1% 0 1%;
+	margin:auto;
+}
+
+.thead {
+	text-align:center;
+	font-weight:bold;
+	height:2em;
+	border-bottom:3px solid #f7f7f7;
+}
+
+.place {
+	padding:1%;
+	border-bottom:1px solid #f7f7f7;
+}
+
+.place:hover {
+	color:#333333;
+	background:#f7f7f7;
+	opacity:.75;
+	cursor:pointer;
 }
 
 #pictop {
 	border-top:10px solid #333333;
 	border-bottom:10px solid #333333;
+}
+
+.wlabel {
+	margin-right:10px;
 }
 
 .stormy {
@@ -109,11 +136,6 @@ button:hover {
 		#222222 85px 5px 0 -5px;
 	height: 50px;  
 	width: 50px; 
-/*	margin-left: -70px; 
-	position: absolute;
-	left: 947px; 
-	top: 70px; */
-
 	margin-left:45%;;
 }
 .stormy:after {
