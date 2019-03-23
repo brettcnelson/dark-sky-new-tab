@@ -2,7 +2,6 @@ var C = (function() {
 	var entry = null;
 	var root = null;
 	var VDOM = null;
-
 	function DOMdiff(DOMparent,updated,curr,child) {
 		if (!curr) {
 			DOMparent.appendChild(DOM(updated));
@@ -21,14 +20,12 @@ var C = (function() {
 			}
 		}
 	}
-
 	function isDifferentType(updated,curr) {
 		if (typeof updated === 'object') {
-			return updated.tag !== curr.tag || updated.feed.forceSync;
+			return updated.tag !== curr.tag || updated.feed.forceSync || updated.feed.listeners;
 		}
 		return updated !== curr;
 	}
-
 	function updateFeeds(feeds,DOMtarget,updated,curr) {
 		Object.keys(feeds).forEach(key => {
 			if (typeof feeds[key] === 'boolean') {
@@ -69,7 +66,6 @@ var C = (function() {
 			}
 		});
 	}
-
 	function DOM(node) {
 		if (typeof node !== 'object' || node === null) {
 			return document.createTextNode(node);
@@ -100,7 +96,6 @@ var C = (function() {
 		children.forEach(c=>DOMel.appendChild(DOM(c)));
 		return DOMel;
 	}
-
 	function C(tag,feed={},children=[]) {
 		if (Array.isArray(feed)) {
 			children = feed;
@@ -108,70 +103,75 @@ var C = (function() {
 		}
 		return { tag,feed,children };
 	}
-
 	function Sync() {
 		var updatedVDOM = entry();
 		DOMdiff(root,updatedVDOM,VDOM,0);
 		VDOM = updatedVDOM;
-		// *************** re-write entire DOM
-		// if (root.childNodes.length) {root.removeChild(root.lastChild)}
-		// root.appendChild(DOM(entry()));
 	}
-
 	C.sync = function() {
 		setTimeout(Sync);
 	}
-
 	C.attach = function(component,rootNode) {
 		entry = component;
 		root = rootNode;
 		Sync();
 	}
-
 	return C;
 }());
 
-function Options({options,display,optionsDisplay,saveOptions,updateOptions}) {
+function Options({defaults,setOption,options,display,optionsDisplay,saveOptions,updateOptions}) {
 	return C('div',{style:{marginBottom:'10em'}},[
 		C('span',{style:{paddingLeft:'3px'}},['\u2602',C('span',{style:{cursor:'pointer',textDecoration:'underline',fontStyle:'italic'},listeners:{onclick:optionsDisplay}},['options'])]),
 		C('div',{style:{display,paddingLeft:'1%'}},[
 			C('div',{style:{margin:'1em',display:'grid',gridTemplateColumns:'1fr 9fr',gridGap:'1em'}},[
 				C('span',{style:{textAlign:'right'}},['Background Color: ']),
-				C('input',{id:'bgcolor',type:'color',autocomplete:true,value:options?options.backgroundColor:'#000000',listeners:{onchange:(e)=>setOption({backgroundColor:e.target.value})}}),
+				C('div',{},[
+					C('input',{id:'backgroundColor',type:'color',value:options?options.backgroundColor:'#000000',listeners:{onchange:(e)=>setOption({backgroundColor:e.target.value})}}),
+					C('button',{style:{marginLeft:'1em'},listeners:{onclick:()=>setDefault('backgroundColor')}},['default'])
+				]),
 				C('span',{style:{textAlign:'right'}},['Widget Bar Color: ']),
-				C('input',{id:'barcolor',type:'color',value:options?options.color:'#000000',listeners:{onchange:(e)=>setOption({color:e.target.value})}}),
+				C('div',{},[
+					C('input',{id:'color',type:'color',value:options?options.color:'#000000',listeners:{onchange:(e)=>setOption({color:e.target.value})}}),
+					C('button',{style:{marginLeft:'1em'},listeners:{onclick:()=>setDefault('color')}},['default'])
+				]),
 				C('span',{style:{textAlign:'right'}},['Widget Units: ']),
 				C('div',{},[
-					C('input',{type:'radio',name:'units',checked:options?options.units==='us':true,listeners:{onclick:()=>setOption({units:'us'})}}),
+					C('input',{type:'radio',name:'units',checked:options&&options.units==='us',listeners:{onclick:()=>setOption({units:'us'})}}),
 					C('label',{class:'wlabel'},['US: Fahrenheit & mph(default)']),
-					C('input',{type:'radio',name:'units',checked:!!options&&options.units==='uk',listeners:{onclick:()=>setOption({units:'uk'})}}),
+					C('input',{type:'radio',name:'units',checked:options&&options.units==='uk',listeners:{onclick:()=>setOption({units:'uk'})}}),
 					C('label',{class:'wlabel'},['UK: Celsius & mph']),
-					C('input',{type:'radio',name:'units',checked:!!options&&options.units==='ca',listeners:{onclick:()=>setOption({units:'ca'})}}),
+					C('input',{type:'radio',name:'units',checked:options&&options.units==='ca',listeners:{onclick:()=>setOption({units:'ca'})}}),
 					C('label',{class:'wlabel'},['CA: Celsius & km/h']),
-					C('input',{type:'radio',name:'units',checked:!!options&&options.units==='si',listeners:{onclick:()=>setOption({units:'si'})}}),
+					C('input',{type:'radio',name:'units',checked:options&&options.units==='si',listeners:{onclick:()=>setOption({units:'si'})}}),
 					C('label',{class:'wlabel'},['SI: Celsius & m/s'])
 				])
 			]),
-			C('button',{id:'defaults',listeners:{onclick:resetAll}},['reset all options to default']),C('button',{id:'saveOpts',listeners:{onclick:()=>saveOptions(options)}},['save'])
+			C('button',{id:'defaults',listeners:{onclick:resetAll}},['reset all options to default']),
+			C('button',{id:'saveOpts',style:{display:'none',backgroundColor:'red',marginLeft:'1em'},listeners:{onclick:()=>saveOptions(options)}},['save'])
 		])
 	]);
 	function resetAll() {
 		chrome.storage.sync.clear(()=>location.reload());
 	}
 	function setOption(option) {
-		document.getElementById('saveOpts').style.background = 'red';
+		document.getElementById('saveOpts').style.display = '';
 		options = Object.assign({},options,option);
+	}
+	function setDefault(key) {
+		document.getElementById('saveOpts').style.display = '';
+		options[key] = defaults[key];
+		document.getElementById(key).value = defaults[key];
 	}
 }
 
 function Pics({picDisplay,display,photos}) {
-	return C('div',{id:'pictop',style:{cursor:photos&&display==='none'?'pointer':''},listeners:{onclick:picDisplay}},[photos?renderPhotos():'']);
+	return C('div',{id:'pictop',style:{backgroundColor:'#333333',cursor:photos&&display==='none'?'pointer':''},listeners:{onclick:picDisplay}},[photos?renderPhotos():'']);
 	function renderPhotos() {
-		return C('div',{style:{display,gridTemplateColumns:'repeat(4,1fr)',padding:'3px',gridGap:'3px'}},photos.map(img));
+		return C('div',{style:{display,margin:'.5vw',gridGap:'.5vw',gridTemplateColumns:'repeat(2,1fr)'}},photos.map(img));
 	}
 	function img(p) {
-		return C('div',{style:{textAlign:'center',backgroundColor:'#333333'}},[
-				C('IMG',{src:p})
+		return C('div',{style:{textAlign:'center'}},[
+			C('span',{style:{display:'inline-block',height:'100%',verticalAlign:'middle'}}),C('img',{src:p,style:{verticalAlign:'middle',maxHeight:'90vh',maxWidth:'49.25vw'}})
 		]);
 	}
 }
@@ -186,7 +186,7 @@ function Tables({session,local,display}) {
 		)]),
 		C('div',{},[
 			C('div',{class:'table',style:{borderLeft:'1px solid #f7f7f7'}},[
-				C('div',{class:'thead'},['\u263D Recent',C('span',{style:{float:'right'}},[C('button',{listeners:{onclick:clearSearches}},['clear'])])]),
+				C('div',{class:'thead'},['\u263D Recent',C('span',{style:{float:'right'}},[C('button',{listeners:{onclick:()=>clearSearches()}},['clear'])])]),
 				C('div',{style:{fontWeight:'normal'}},session.searches.map(s=>C('div',{class:'place',listeners:{onclick:()=>loadPlace(s)}},[s.name])))
 			]
 		)])
@@ -250,9 +250,9 @@ function InterContainer({display,tables,session,local}) {
 	]);
 	function saveLocButton() {
 		if (local.length&&session.current.coords&&local.some(s=>s.name===session.current.name)) {
-			return C('button',{class:'midbuttons',id:'prevsaved',listeners:{onclick:deleteLocation},forceSync:true},[`\u2606 delete this place`]);
+			return C('button',{class:'midbuttons',id:'prevsaved',listeners:{onclick:deleteLocation}},[`\u2606 delete this place`]);
 		}
-		return C('button',{class:'midbuttons',id:'saveLocBtn',listeners:{onclick:saveLoc},forceSync:true},[`\u2605 save this place`]);
+		return C('button',{class:'midbuttons',id:'saveLocBtn',listeners:{onclick:saveLoc}},[`\u2605 save this place`]);
 	}
 	function getLocation() {
 		session.current = {};
@@ -337,7 +337,11 @@ function Frame({options,session}) {
 
 var App = (function() {
 	var data = {state: {tableDisplay:'none',picDisplay:'none',optionsDisplay:'none'}};
-	getSync();
+	chrome.storage.sync.get(null,(sync={}) => {
+		data.sync = Object.assign({},defaults(),sync);
+		document.body.style.backgroundColor = data.sync.backgroundColor;
+		C.sync();
+	});
 	google.maps.event.addDomListener(window, 'load', () => {
 		var input = document.getElementById('locSearch');
 		var autocomplete = new google.maps.places.Autocomplete(input)
@@ -349,7 +353,7 @@ var App = (function() {
 			var url = results.url;
 			session.current = {name,coords,url};
 			if (results.photos) {
-				session.current.photos = results.photos.map(p=>p.getUrl({'maxWidth': 500, 'maxHeight': 200}));
+				session.current.photos = results.photos.map(p=>p.getUrl());
 			}		
 			if (session.searches.every(s=>s.name!==session.current.name)) {
 				session.searches.unshift(session.current);
@@ -368,15 +372,8 @@ var App = (function() {
 			InterContainer({display:feed.state.tableDisplay,tables,session:feed.session,local:data.local}),
 			Tables({display:feed.state.tableDisplay,session:feed.session,local:feed.local}),
 			Pics({picDisplay,display:feed.state.picDisplay,photos:feed.session.current.photos}),
-			Options({saveOptions,updateOptions,options:feed.sync,display:feed.state.optionsDisplay,optionsDisplay:toggleOptions})
+			Options({defaults:defaults(),saveOptions,updateOptions,options:feed.sync,display:feed.state.optionsDisplay,optionsDisplay:toggleOptions})
 		]);
-	}
-	function getSync() {
-		chrome.storage.sync.get(null,(sync={}) => {
-			data.sync = Object.assign({},defaults(),sync);
-			document.body.style.backgroundColor = data.sync.backgroundColor;
-			C.sync();
-		});
 	}
 	function tables() {
 		data.state.tableDisplay = data.state.tableDisplay === 'none' ? 'grid' : 'none';
@@ -399,7 +396,7 @@ var App = (function() {
 		C.sync();
 	}
 	function defaults() {
-		return {backgroundColor:'#9C9C9C',units:'us',color:'#333333'};
+		return {backgroundColor:'#929292',units:'us',color:'#333333'};
 	}
 	function deepCopy(val) {
 		if (typeof val === 'object' && val !== null) {
