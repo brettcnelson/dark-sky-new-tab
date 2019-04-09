@@ -3,7 +3,7 @@
 	"name": "Dark Sky Weather New Tab Page",
 	"description": "A new tab page using Dark Sky weather data",
 	"version": "2.0",
-		"chrome_url_overrides": {
+	"chrome_url_overrides": {
 		"newtab": "index.html"
 	},
 	"icons": {"128": "icon.png"},

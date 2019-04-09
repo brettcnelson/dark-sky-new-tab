@@ -119,7 +119,7 @@ var C = (function() {
 	return C;
 }());
 
-function Options({defaults,setOption,options,display,optionsDisplay,saveOptions,updateOptions}) {
+function Options({defaults,options,display,optionsDisplay,saveOptions}) {
 	return C('div',{style:{marginBottom:'10em'}},[
 		C('span',{style:{paddingLeft:'3px'}},['\u2602',C('span',{style:{cursor:'pointer',textDecoration:'underline',fontStyle:'italic'},listeners:{onclick:optionsDisplay}},['options'])]),
 		C('div',{style:{display,paddingLeft:'1%'}},[
@@ -238,15 +238,14 @@ function InterContainer({display,tables,session,local}) {
 	return C('div',{id:'intercontainer'},[
 		DarkSky({current:session.current}),
 		C('div',{style:{textAlign:'center'}},[
-			C('input',{id:'locSearch',placeholder:'\u26B2',autofocus:true})
+			C('input',{id:'locSearch',placeholder:'\u26B2',autofocus:true}),
+			C('div',{class:'btncon'},[
+				C('button',{class:'midbuttons',id:'show-tables',listeners:{onclick:()=>tables()}},[`\u2605: ${local.length} - \u263D:${session.searches.length}`]),
+				saveLocButton(),
+				C('button',{class:'midbuttons',id:'loc',listeners:{onclick:getLocation}},['\u21BB'])
+			])
 		]),
-		Google({current:session.current}),
-		C('div',{},[]),
-		C('div',{style:{width:'60%',margin:'auto',display:'grid',gridTemplateColumns:'1fr 1fr 1fr',height:'3em',gridGap:'1%'}},[
-			C('button',{class:'midbuttons',id:'show-tables',listeners:{onclick:()=>tables()}},[`\u2605: ${local.length} - \u263D:${session.searches.length}`]),
-			saveLocButton(),
-			C('button',{class:'midbuttons',id:'loc',listeners:{onclick:getLocation}},['\u21BB'])
-		])
+		Google({current:session.current})
 	]);
 	function saveLocButton() {
 		if (local.length&&session.current.coords&&local.some(s=>s.name===session.current.name)) {
@@ -294,12 +293,12 @@ function Frame({options,session}) {
 	}
 	function iFrame() {
 		var src = `https://forecast.io/embed/#lat=${session.current.coords[0]}&lon=${session.current.coords[1]}&name=${session.current.name}&color=${options.color}&units=${options.units}`;
-		return C('iframe',{id:"forecast_embed",frameborder:'0',height:'245',width:"100%",src});
+		return C('iframe',{id:"forecast_embed",frameborder:0,height:'100%',width:"100%",style:{border:`1px solid ${options.backgroundColor}`},src});
 	}
 	function Loading() {
 		return C('div',{id:'framecon'},[
-			C('div',{class:'stormy'},[]),
-			C('div',{},[C('p',{id:'error',style:{fontWeight:'bold',fontSize:'14px',textAlign:'center',paddingTop:'5%'}},['Loading . . .'])])
+			options ? C('div',{id:'spinner',class:"lds-ripple"},[C('div'),C('div')]) : C('div',{id:'spinner',class:"lds-dual-ring"}),
+			C('p',{id:'error',style:{fontWeight:'bold',fontSize:'1.5em',textAlign:'center'}},[])
 		]);
 	}
 
@@ -316,20 +315,22 @@ function Frame({options,session}) {
 						session.searches.unshift(session.current);
 					}
 					sessionStorage.setItem('DSNT',JSON.stringify(session));
-					C.sync();
+					// C.sync();
+					setTimeout(C.sync,500);
 				}
 			})
 		}, function(error) {
 				console.log('err =', error);
+				document.getElementById('spinner').style.display = 'none';
 				var err = document.getElementById('error');
 				if (error.code === 1) {
-					err.innerHTML = 'It loooks like you haven\'t enabled location permission.  Search for a location below';
+					err.innerHTML = 'It loooks like you haven\'t enabled location permission.  Search for a location below<br><br>\u2193';
 				}
 				else if (error.code === 2) {
-					err.innerHTML = 'For some reason your location is unavailable - is your wifi on? modem/router working?<br>Sometimes Chrome\'s location service goes down for a little while.<br>Just search for a location below<br>\u2193';
+					err.innerHTML = 'Your location is unavailable. Try to search for a location below<br><br>\u2193';
 				}
 				else {
-					err.innerHTML = 'The location search timed out.  Search for a location below';
+					err.innerHTML = 'The location search timed out.  Search for a location below<br><br>\u2193';
 				}
 		});
 	}
@@ -340,28 +341,31 @@ var App = (function() {
 	chrome.storage.sync.get(null,(sync={}) => {
 		data.sync = Object.assign({},defaults(),sync);
 		document.body.style.backgroundColor = data.sync.backgroundColor;
-		C.sync();
+		// C.sync();
+		setTimeout(C.sync,500);
 	});
-	google.maps.event.addDomListener(window, 'load', () => {
-		var input = document.getElementById('locSearch');
-		var autocomplete = new google.maps.places.Autocomplete(input)
-		autocomplete.addListener('place_changed', () => {
-			var results = autocomplete.getPlace();
-			var name = results.formatted_address;
-			var coords = [results.geometry.location.lat().toFixed(4),results.geometry.location.lng().toFixed(4)];
-			var session = data.session;
-			var url = results.url;
-			session.current = {name,coords,url};
-			if (results.photos) {
-				session.current.photos = results.photos.map(p=>p.getUrl());
-			}		
-			if (session.searches.every(s=>s.name!==session.current.name)) {
-				session.searches.unshift(session.current);
-			}
-			sessionStorage.setItem('DSNT',JSON.stringify(session));
-			location.reload();
-		})
-	});
+	if (window.google) {
+		google.maps.event.addDomListener(window, 'load', () => {
+			var input = document.getElementById('locSearch');
+			var autocomplete = new google.maps.places.Autocomplete(input)
+			autocomplete.addListener('place_changed', () => {
+				var results = autocomplete.getPlace();
+				var name = results.formatted_address;
+				var coords = [results.geometry.location.lat().toFixed(4),results.geometry.location.lng().toFixed(4)];
+				var session = data.session;
+				var url = results.url;
+				session.current = {name,coords,url};
+				if (results.photos) {
+					session.current.photos = results.photos.map(p=>p.getUrl());
+				}		
+				if (session.searches.every(s=>s.name!==session.current.name)) {
+					session.searches.unshift(session.current);
+				}
+				sessionStorage.setItem('DSNT',JSON.stringify(session));
+				location.reload();
+			})
+		});
+	}
 	return function() {
 		data.session = JSON.parse(sessionStorage.getItem('DSNT'))||{searches:[],current:{}};
 		data.local = JSON.parse(localStorage.getItem('DSNT'))||[];
@@ -372,7 +376,7 @@ var App = (function() {
 			InterContainer({display:feed.state.tableDisplay,tables,session:feed.session,local:data.local}),
 			Tables({display:feed.state.tableDisplay,session:feed.session,local:feed.local}),
 			Pics({picDisplay,display:feed.state.picDisplay,photos:feed.session.current.photos}),
-			Options({defaults:defaults(),saveOptions,updateOptions,options:feed.sync,display:feed.state.optionsDisplay,optionsDisplay:toggleOptions})
+			Options({defaults:defaults(),saveOptions,options:feed.sync,display:feed.state.optionsDisplay,optionsDisplay:toggleOptions})
 		]);
 	}
 	function tables() {
@@ -390,10 +394,6 @@ var App = (function() {
 	function saveOptions(opts) {
 		data.sync = opts;
 		chrome.storage.sync.set(opts,()=>location.reload());
-	}
-	function updateOptions(opts) {
-		data.sync = Object.assign({},defaults(),opts);
-		C.sync();
 	}
 	function defaults() {
 		return {backgroundColor:'#929292',units:'us',color:'#333333'};
