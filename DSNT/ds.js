@@ -119,41 +119,39 @@ var C = (function() {
 	return C;
 }());
 
-function Options({defaults,options,display,optionsDisplay,saveOptions}) {
-	return C('div',{style:{marginBottom:'10em'}},[
+function Options({defaults,options,display,optionsDisplay,saveOptions,resetAll}) {
+	return C('div',{},[
 		C('span',{style:{paddingLeft:'3px'}},['\u2602',C('span',{style:{cursor:'pointer',textDecoration:'underline',fontStyle:'italic'},listeners:{onclick:optionsDisplay}},['options'])]),
 		C('div',{style:{display,paddingLeft:'1%'}},[
-			C('div',{style:{margin:'1em',display:'grid',gridTemplateColumns:'1fr 9fr',gridGap:'1em'}},[
-				C('span',{style:{textAlign:'right'}},['Background Color: ']),
+			C('div',{style:{margin:'1em',display:'grid',gridTemplateColumns:'auto 1fr',gridGap:'1em'}},[
+				C('span',{style:{textAlign:'right',alignSelf:'center'}},['Background Color: ']),
 				C('div',{},[
-					C('input',{id:'backgroundColor',type:'color',value:options?options.backgroundColor:'#000000',listeners:{onchange:(e)=>setOption({backgroundColor:e.target.value})}}),
-					C('button',{style:{marginLeft:'1em'},listeners:{onclick:()=>setDefault('backgroundColor')}},['default'])
+					C('input',{id:'backgroundColor',type:'color',value:options.backgroundColor,style:{height:'50px',width:'50px',backgroundColor:'#f7f7f7'},listeners:{onchange:(e)=>setOption({backgroundColor:e.target.value},e.target.value)}}),
+					C('button',{style:{marginLeft:'1em',backgroundColor:defaults.backgroundColor},listeners:{onclick:()=>setDefault('backgroundColor')}},['default'])
 				]),
-				C('span',{style:{textAlign:'right'}},['Widget Bar Color: ']),
+				C('span',{style:{textAlign:'right',alignSelf:'center'}},['Widget Bar Color: ']),
 				C('div',{},[
-					C('input',{id:'color',type:'color',value:options?options.color:'#000000',listeners:{onchange:(e)=>setOption({color:e.target.value})}}),
-					C('button',{style:{marginLeft:'1em'},listeners:{onclick:()=>setDefault('color')}},['default'])
+					C('input',{id:'color',type:'color',value:options?options.color:'#000000',style:{height:'50px',width:'50px',fontSize:'1em',backgroundColor:'#f7f7f7'},listeners:{onchange:(e)=>setOption({color:e.target.value})}}),
+					C('button',{style:{marginLeft:'1em',backgroundColor:defaults.color,color:'#f7f7f7'},listeners:{onclick:()=>setDefault('color')}},['default'])
 				]),
-				C('span',{style:{textAlign:'right'}},['Widget Units: ']),
+				C('span',{style:{textAlign:'right',alignSelf:'center'}},['Widget Units: ']),
 				C('div',{},[
-					C('input',{type:'radio',name:'units',checked:options&&options.units==='us',listeners:{onclick:()=>setOption({units:'us'})}}),
-					C('label',{class:'wlabel'},['US: Fahrenheit & mph(default)']),
-					C('input',{type:'radio',name:'units',checked:options&&options.units==='uk',listeners:{onclick:()=>setOption({units:'uk'})}}),
-					C('label',{class:'wlabel'},['UK: Celsius & mph']),
-					C('input',{type:'radio',name:'units',checked:options&&options.units==='ca',listeners:{onclick:()=>setOption({units:'ca'})}}),
-					C('label',{class:'wlabel'},['CA: Celsius & km/h']),
-					C('input',{type:'radio',name:'units',checked:options&&options.units==='si',listeners:{onclick:()=>setOption({units:'si'})}}),
-					C('label',{class:'wlabel'},['SI: Celsius & m/s'])
+					C('select',{style:{fontSize:'1em',backgroundColor:'#f7f7f7'},listeners:{onchange:(e)=>setOption({units:e.target.value})}},[
+						C('option',{value:'us',selected:options.units==='us'},['US: Fahrenheit & mph']),
+						C('option',{value:'uk',selected:options.units==='uk'},['UK: Celsius & mph']),
+						C('option',{value:'ca',selected:options.units==='ca'},['CA: Celsius & km/h']),
+						C('option',{value:'si',selected:options.units==='si'},['SI: Celsius & m/s'])
+					])
 				])
 			]),
 			C('button',{id:'defaults',listeners:{onclick:resetAll}},['reset all options to default']),
 			C('button',{id:'saveOpts',style:{display:'none',backgroundColor:'red',marginLeft:'1em'},listeners:{onclick:()=>saveOptions(options)}},['save'])
 		])
 	]);
-	function resetAll() {
-		chrome.storage.sync.clear(()=>location.reload());
-	}
-	function setOption(option) {
+	function setOption(option,realTime) {
+		if (realTime) {
+			document.body.style.backgroundColor = realTime;
+		}
 		document.getElementById('saveOpts').style.display = '';
 		options = Object.assign({},options,option);
 	}
@@ -165,18 +163,22 @@ function Options({defaults,options,display,optionsDisplay,saveOptions}) {
 }
 
 function Pics({picDisplay,display,photos}) {
-	return C('div',{id:'pictop',style:{backgroundColor:'#333333',cursor:photos&&display==='none'?'pointer':''},listeners:{onclick:picDisplay}},[photos?renderPhotos():'']);
+	return C('div',{style:{backgroundColor:'#333333'}},
+		photos ? [C('div',{id:'pictop',style:{cursor:'pointer',backgroundImage:`radial-gradient(#f7f7f7,#333333)`},listeners:{onclick:picDisplay}}),renderPhotos()] : 
+			[C('div',{id:'pictop'})]
+	);
 	function renderPhotos() {
-		return C('div',{style:{display,margin:'.5vw',gridGap:'.5vw',gridTemplateColumns:'repeat(2,1fr)'}},photos.map(img));
+		return C('div',{style:{display,borderBottom:'1vw solid #333333',margin:'1vw 1vw 0 1vw',gridGap:'1vw',gridTemplateColumns:'repeat(2,1fr)'}},photos.map(img));
 	}
 	function img(p) {
 		return C('div',{style:{textAlign:'center'}},[
-			C('span',{style:{display:'inline-block',height:'100%',verticalAlign:'middle'}}),C('img',{src:p,style:{verticalAlign:'middle',maxHeight:'90vh',maxWidth:'49.25vw'}})
+			C('span',{style:{display:'inline-block',height:'100%',verticalAlign:'middle'}}),
+			C('a',{href:p,target:'_blank'},[C('img',{src:p,style:{verticalAlign:'middle',maxHeight:'90vh',maxWidth:'48.5vw'}})])
 		]);
 	}
 }
 
-function Tables({session,local,display}) {
+function Tables({reloadiFrame,session,local,display}) {
 	return C('div',{id:'tables',style:{display}},[
 		C('div',{},[
 			C('div',{class:'table',style:{borderRight:'1px solid #f7f7f7'}},[
@@ -212,9 +214,7 @@ function Tables({session,local,display}) {
 		]);
 	}
 	function loadPlace(place) {
-		session.current = place;
-		sessionStorage.setItem('DSNT',JSON.stringify(session));
-		location.reload();
+		reloadiFrame(place);
 	} 
 }
 
@@ -240,18 +240,18 @@ function InterContainer({display,tables,session,local}) {
 		C('div',{style:{textAlign:'center'}},[
 			C('input',{id:'locSearch',placeholder:'\u26B2',autofocus:true}),
 			C('div',{class:'btncon'},[
-				C('button',{class:'midbuttons',id:'show-tables',listeners:{onclick:()=>tables()}},[`\u2605: ${local.length} - \u263D:${session.searches.length}`]),
+				C('button',{class:'midbuttons',listeners:{onclick:()=>tables()}},[`\u2605: ${local.length} - \u263D:${session.searches.length}`]),
 				saveLocButton(),
-				C('button',{class:'midbuttons',id:'loc',listeners:{onclick:getLocation}},['\u21BB'])
+				C('button',{class:'midbuttons',listeners:{onclick:getLocation}},['\u21BB'])
 			])
 		]),
 		Google({current:session.current})
 	]);
 	function saveLocButton() {
 		if (local.length&&session.current.coords&&local.some(s=>s.name===session.current.name)) {
-			return C('button',{class:'midbuttons',id:'prevsaved',listeners:{onclick:deleteLocation}},[`\u2606 delete this place`]);
+			return C('button',{class:'midbuttons',id:'prevsaved',listeners:{onclick:deleteLocation}},[`\u2606 saved`]);
 		}
-		return C('button',{class:'midbuttons',id:'saveLocBtn',listeners:{onclick:saveLoc}},[`\u2605 save this place`]);
+		return C('button',{class:'midbuttons',listeners:{onclick:saveLoc}},[`\u2605 save this place`]);
 	}
 	function getLocation() {
 		session.current = {};
@@ -282,23 +282,30 @@ function InterContainer({display,tables,session,local}) {
 function Frame({options,session}) {
 	return C('div',{id:'loadframe'},[checkLoad()]);
 	function checkLoad() {
-		if (!options) {
-			return Loading();
+		if (options) {
+			if (session.current.coords) {
+				return iFrame();
+			}
+			if (!session.temp) {
+				getLocation();
+			}
+			else {
+				session.current = session.temp;
+				delete session.temp;
+				sessionStorage.setItem('DSNT',JSON.stringify(session));
+				C.sync();
+			}
 		}
-		if (session.current.coords) {
-			return iFrame();
-		}
-		getLocation();
 		return Loading();
 	}
 	function iFrame() {
 		var src = `https://forecast.io/embed/#lat=${session.current.coords[0]}&lon=${session.current.coords[1]}&name=${session.current.name}&color=${options.color}&units=${options.units}`;
-		return C('iframe',{id:"forecast_embed",frameborder:0,height:'100%',width:"100%",style:{border:`1px solid ${options.backgroundColor}`},src});
+		return C('iframe',{id:"forecast_embed",frameborder:1,height:'100%',width:'100%',style:{border:`1px solid rgba(0,0,0,0)`},src});
 	}
 	function Loading() {
 		return C('div',{id:'framecon'},[
-			options ? C('div',{id:'spinner',class:"lds-ripple"},[C('div'),C('div')]) : C('div',{id:'spinner',class:"lds-dual-ring"}),
-			C('p',{id:'error',style:{fontWeight:'bold',fontSize:'1.5em',textAlign:'center'}},[])
+			C('div',{id:'spinner'},[Spinner()]),
+			C('p',{id:'error',style:{fontWeight:'bold',textAlign:'center'}},[])
 		]);
 	}
 
@@ -315,54 +322,53 @@ function Frame({options,session}) {
 						session.searches.unshift(session.current);
 					}
 					sessionStorage.setItem('DSNT',JSON.stringify(session));
-					// C.sync();
-					setTimeout(C.sync,500);
-				}
-			})
-		}, function(error) {
-				console.log('err =', error);
-				document.getElementById('spinner').style.display = 'none';
-				var err = document.getElementById('error');
-				if (error.code === 1) {
-					err.innerHTML = 'It loooks like you haven\'t enabled location permission.  Search for a location below<br><br>\u2193';
-				}
-				else if (error.code === 2) {
-					err.innerHTML = 'Your location is unavailable. Try to search for a location below<br><br>\u2193';
+					C.sync();
 				}
 				else {
-					err.innerHTML = 'The location search timed out.  Search for a location below<br><br>\u2193';
+					error(status);
 				}
-		});
+			})
+		}, error,{maximumAge:1000,timeout:7000,enableHighAccuracy:true});
 	}
+	function error(err) {
+		console.warn(err);
+		document.getElementById('spinner').style.display = 'none';
+		document.getElementById('error').innerHTML = `There was an error getting your location.<br>Search for a location below<br><br>\u2193`;
+	}
+}
+
+function Spinner() {
+	return C('div',{class:'lds-default'},Array.from({length:12},()=>C('div')));
 }
 
 var App = (function() {
 	var data = {state: {tableDisplay:'none',picDisplay:'none',optionsDisplay:'none'}};
 	chrome.storage.sync.get(null,(sync={}) => {
 		data.sync = Object.assign({},defaults(),sync);
-		document.body.style.backgroundColor = data.sync.backgroundColor;
-		// C.sync();
-		setTimeout(C.sync,500);
+		C.sync();
+		// setTimeout(C.sync,2000);
 	});
 	if (window.google) {
 		google.maps.event.addDomListener(window, 'load', () => {
 			var input = document.getElementById('locSearch');
-			var autocomplete = new google.maps.places.Autocomplete(input)
+			var autocomplete = new google.maps.places.Autocomplete(input);
 			autocomplete.addListener('place_changed', () => {
 				var results = autocomplete.getPlace();
-				var name = results.formatted_address;
+				var name = input.value;
+				input.value = '';
 				var coords = [results.geometry.location.lat().toFixed(4),results.geometry.location.lng().toFixed(4)];
 				var session = data.session;
 				var url = results.url;
-				session.current = {name,coords,url};
+				session.current = {};
+				session.temp = {name,coords,url};
 				if (results.photos) {
-					session.current.photos = results.photos.map(p=>p.getUrl());
+					session.temp.photos = results.photos.map(p=>p.getUrl());
 				}		
-				if (session.searches.every(s=>s.name!==session.current.name)) {
-					session.searches.unshift(session.current);
+				if (session.searches.every(s=>s.name!==session.temp.name)) {
+					session.searches.unshift(session.temp);
 				}
 				sessionStorage.setItem('DSNT',JSON.stringify(session));
-				location.reload();
+				C.sync();
 			})
 		});
 	}
@@ -370,13 +376,13 @@ var App = (function() {
 		data.session = JSON.parse(sessionStorage.getItem('DSNT'))||{searches:[],current:{}};
 		data.local = JSON.parse(localStorage.getItem('DSNT'))||[];
 		var feed = deepCopy(data);
-		return C('div',{},[
-			C('a',{href:'https://darksky.net/',target:'_blank'},[C('img',{id:'headpic',src:'pbds.svg'})]),
+		document.body.style.backgroundColor = feed.sync ? feed.sync.backgroundColor : defaults().backgroundColor;
+		return C('div',{id:'root'},[
 			Frame({options:feed.sync,session:feed.session}),
 			InterContainer({display:feed.state.tableDisplay,tables,session:feed.session,local:data.local}),
-			Tables({display:feed.state.tableDisplay,session:feed.session,local:feed.local}),
+			Tables({reloadiFrame,display:feed.state.tableDisplay,session:feed.session,local:feed.local}),
 			Pics({picDisplay,display:feed.state.picDisplay,photos:feed.session.current.photos}),
-			Options({defaults:defaults(),saveOptions,options:feed.sync,display:feed.state.optionsDisplay,optionsDisplay:toggleOptions})
+			feed.sync?Options({resetAll,defaults:defaults(),saveOptions,options:feed.sync,display:feed.state.optionsDisplay,optionsDisplay:toggleOptions}):Spinner()
 		]);
 	}
 	function tables() {
@@ -384,7 +390,7 @@ var App = (function() {
 		C.sync();
 	}
 	function picDisplay() {
-		data.state.picDisplay = 'grid';
+		data.state.picDisplay = data.state.picDisplay === 'none' ? 'grid' : 'none';
 		C.sync();
 	}
 	function toggleOptions() {
@@ -393,7 +399,17 @@ var App = (function() {
 	}
 	function saveOptions(opts) {
 		data.sync = opts;
-		chrome.storage.sync.set(opts,()=>location.reload());
+		chrome.storage.sync.set(opts,reloadiFrame);
+	}
+	function resetAll() {
+		data.sync = defaults();
+		chrome.storage.sync.clear(reloadiFrame);
+	}
+	function reloadiFrame(place=data.session.current) {
+		data.session.temp = place;
+		data.session.current = {};
+		sessionStorage.setItem('DSNT',JSON.stringify(data.session));
+		C.sync();
 	}
 	function defaults() {
 		return {backgroundColor:'#929292',units:'us',color:'#333333'};
