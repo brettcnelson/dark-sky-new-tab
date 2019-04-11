@@ -358,21 +358,20 @@ var App = (function() {
 			var autocomplete = new google.maps.places.Autocomplete(input);
 			autocomplete.addListener('place_changed', () => {
 				var results = autocomplete.getPlace();
-				var name = input.value;
-				input.value = '';
-				var coords = [results.geometry.location.lat(),results.geometry.location.lng()];
-				var url = results.url;
-				var session = data.session;
-				session.current = {};
-				session.temp = {name,coords,url};
-				if (results.photos) {
-					session.temp.photos = results.photos.map(p=>p.getUrl());
-				}		
-				if (session.searches.every(s=>s.name!==session.temp.name)) {
-					session.searches.unshift(session.temp);
+				if (results.geometry) {
+					session.temp = {name:input.value,coords:[results.geometry.location.lat(),results.geometry.location.lng()],url:results.url};
+					input.value = '';
+					var session = data.session;
+					session.current = {};
+					if (results.photos) {
+						session.temp.photos = results.photos.map(p=>p.getUrl());
+					}		
+					if (session.searches.every(s=>s.name!==session.temp.name)) {
+						session.searches.unshift(session.temp);
+					}
+					sessionStorage.setItem('DSNT',JSON.stringify(session));
+					C.sync();
 				}
-				sessionStorage.setItem('DSNT',JSON.stringify(session));
-				C.sync();
 			})
 		});
 	}
