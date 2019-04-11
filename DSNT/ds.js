@@ -127,7 +127,7 @@ function Options({defaults,options,display,optionsDisplay,saveOptions,resetAll})
 				C('span',{style:{textAlign:'right',alignSelf:'center'}},['Background Color: ']),
 				C('div',{},[
 					C('input',{id:'backgroundColor',type:'color',value:options.backgroundColor,style:{height:'50px',width:'50px',backgroundColor:'#f7f7f7'},listeners:{onchange:(e)=>setOption({backgroundColor:e.target.value},e.target.value)}}),
-					C('button',{style:{marginLeft:'1em',backgroundColor:defaults.backgroundColor},listeners:{onclick:()=>setDefault('backgroundColor')}},['default'])
+					C('button',{style:{marginLeft:'1em',backgroundColor:defaults.backgroundColor},listeners:{onclick:()=>setDefault('backgroundColor',true)}},['default'])
 				]),
 				C('span',{style:{textAlign:'right',alignSelf:'center'}},['Widget Bar Color: ']),
 				C('div',{},[
@@ -145,7 +145,11 @@ function Options({defaults,options,display,optionsDisplay,saveOptions,resetAll})
 				])
 			]),
 			C('button',{id:'defaults',listeners:{onclick:resetAll}},['reset all options to default']),
-			C('button',{id:'saveOpts',style:{display:'none',backgroundColor:'red',marginLeft:'1em'},listeners:{onclick:()=>saveOptions(options)}},['save'])
+			C('span',{forceSync:true,id:'saveOpts',style:{display:'none',marginLeft:'1em'}},[
+				C('button',{style:{backgroundColor:'red',border:'1px solid #333333'},listeners:{onclick:()=>saveOptions(options)}},['SAVE']),
+				C('span',{style:{fontStyle:'italic',marginLeft:'1em'}},['widget will update when options are saved'])
+			]),
+			C('div',{style:{marginTop:'2em',fontSize:'.75em',fontStyle:'italic'}},['send feedback/suggestions to ',C('a',{class:'links',href:'mailto:weatherwidgetnewtab@yahoo.com',target:'_blank'},['weatherwidgetnewtab@yahoo.com'])])
 		])
 	]);
 	function setOption(option,realTime) {
@@ -155,9 +159,13 @@ function Options({defaults,options,display,optionsDisplay,saveOptions,resetAll})
 		document.getElementById('saveOpts').style.display = '';
 		options = Object.assign({},options,option);
 	}
-	function setDefault(key) {
-		document.getElementById('saveOpts').style.display = '';
-		options[key] = defaults[key];
+	function setDefault(key,realTime) {
+		var option = {};
+		option[key] = defaults[key];
+		if (realTime) {
+			realTime = defaults[key];
+		}
+		setOption(option,realTime);
 		document.getElementById(key).value = defaults[key];
 	}
 }
@@ -286,14 +294,14 @@ function Frame({options,session}) {
 			if (session.current.coords) {
 				return iFrame();
 			}
-			if (!session.temp) {
-				getLocation();
-			}
-			else {
+			if (session.temp) {
 				session.current = session.temp;
 				delete session.temp;
 				sessionStorage.setItem('DSNT',JSON.stringify(session));
 				C.sync();
+			}
+			else {
+				getLocation();
 			}
 		}
 		return Loading();
@@ -308,16 +316,13 @@ function Frame({options,session}) {
 			C('p',{id:'error',style:{fontWeight:'bold',textAlign:'center'}},[])
 		]);
 	}
-
 	function getLocation() {
 		navigator.geolocation.getCurrentPosition(function(p) {
 			var geocoder = new google.maps.Geocoder;
 			geocoder.geocode({'location': {lat: p.coords.latitude, lng: p.coords.longitude}}, function(results, status) {
 				if (status === 'OK') {
-					var coords = [p.coords.latitude.toFixed(4),p.coords.longitude.toFixed(4)];
-					var address = results[0].address_components;
 					session.current.name = results[0].formatted_address;
-					session.current.coords = coords;
+					session.current.coords = [p.coords.latitude,p.coords.longitude];
 					if (session.searches.every(s=>s.name!==session.current.name)) {
 						session.searches.unshift(session.current);
 					}
@@ -328,7 +333,7 @@ function Frame({options,session}) {
 					error(status);
 				}
 			})
-		}, error,{maximumAge:1000,timeout:7000,enableHighAccuracy:true});
+		}, error,{maximumAge:1000,timeout:8000,enableHighAccuracy:true});
 	}
 	function error(err) {
 		console.warn(err);
@@ -346,7 +351,6 @@ var App = (function() {
 	chrome.storage.sync.get(null,(sync={}) => {
 		data.sync = Object.assign({},defaults(),sync);
 		C.sync();
-		// setTimeout(C.sync,2000);
 	});
 	if (window.google) {
 		google.maps.event.addDomListener(window, 'load', () => {
@@ -356,9 +360,9 @@ var App = (function() {
 				var results = autocomplete.getPlace();
 				var name = input.value;
 				input.value = '';
-				var coords = [results.geometry.location.lat().toFixed(4),results.geometry.location.lng().toFixed(4)];
-				var session = data.session;
+				var coords = [results.geometry.location.lat(),results.geometry.location.lng()];
 				var url = results.url;
+				var session = data.session;
 				session.current = {};
 				session.temp = {name,coords,url};
 				if (results.photos) {
@@ -379,7 +383,7 @@ var App = (function() {
 		document.body.style.backgroundColor = feed.sync ? feed.sync.backgroundColor : defaults().backgroundColor;
 		return C('div',{id:'root'},[
 			Frame({options:feed.sync,session:feed.session}),
-			InterContainer({display:feed.state.tableDisplay,tables,session:feed.session,local:data.local}),
+			InterContainer({display:feed.state.tableDisplay,tables,session:feed.session,local:feed.local}),
 			Tables({reloadiFrame,display:feed.state.tableDisplay,session:feed.session,local:feed.local}),
 			Pics({picDisplay,display:feed.state.picDisplay,photos:feed.session.current.photos}),
 			feed.sync?Options({resetAll,defaults:defaults(),saveOptions,options:feed.sync,display:feed.state.optionsDisplay,optionsDisplay:toggleOptions}):Spinner()

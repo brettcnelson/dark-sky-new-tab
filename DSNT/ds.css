@@ -11,6 +11,9 @@ img {
   filter: grayscale(1); 
   -webkit-filter: grayscale(1);
 }
+button {
+  border-radius:10%;
+}
 button:hover {
 	cursor:pointer;
 }
