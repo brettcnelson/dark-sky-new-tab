@@ -359,10 +359,10 @@ var App = (function() {
 			autocomplete.addListener('place_changed', () => {
 				var results = autocomplete.getPlace();
 				if (results.geometry) {
-					session.temp = {name:input.value,coords:[results.geometry.location.lat(),results.geometry.location.lng()],url:results.url};
-					input.value = '';
 					var session = data.session;
 					session.current = {};
+					session.temp = {name:input.value,coords:[results.geometry.location.lat(),results.geometry.location.lng()],url:results.url};
+					input.value = '';
 					if (results.photos) {
 						session.temp.photos = results.photos.map(p=>p.getUrl());
 					}		
