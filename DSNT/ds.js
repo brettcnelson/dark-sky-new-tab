@@ -123,16 +123,16 @@ function Options({defaults,options,display,optionsDisplay,saveOptions,resetAll})
 	return C('div',{},[
 		C('span',{style:{paddingLeft:'3px'}},['\u2602',C('span',{style:{cursor:'pointer',textDecoration:'underline',fontStyle:'italic'},listeners:{onclick:optionsDisplay}},['options'])]),
 		C('div',{style:{display,paddingLeft:'1%'}},[
-			C('div',{style:{margin:'1em',display:'grid',gridTemplateColumns:'auto 1fr',gridGap:'1em'}},[
+			C('div',{style:{padding:'1em',display:'grid',gridTemplateColumns:'max-content max-content',gridGap:'1em'}},[
 				C('span',{style:{textAlign:'right',alignSelf:'center'}},['Background Color: ']),
-				C('div',{},[
-					C('input',{id:'backgroundColor',type:'color',value:options.backgroundColor,style:{height:'50px',width:'50px',backgroundColor:'#f7f7f7'},listeners:{onchange:(e)=>setOption({backgroundColor:e.target.value},e.target.value)}}),
-					C('button',{style:{marginLeft:'1em',backgroundColor:defaults.backgroundColor},listeners:{onclick:()=>setDefault('backgroundColor',true)}},['default'])
+				C('div',{style:{display:'grid',gridTemplateColumns:'min-content min-content',gridGap:'1em'}},[
+					C('input',{id:'backgroundColor',type:'color',value:options.backgroundColor,listeners:{onchange:(e)=>setOption({backgroundColor:e.target.value},e.target.value)}}),
+					C('button',{style:{backgroundColor:defaults.backgroundColor},listeners:{onclick:()=>setDefault('backgroundColor',true)}},['default'])
 				]),
 				C('span',{style:{textAlign:'right',alignSelf:'center'}},['Widget Bar Color: ']),
-				C('div',{},[
-					C('input',{id:'color',type:'color',value:options?options.color:'#000000',style:{height:'50px',width:'50px',fontSize:'1em',backgroundColor:'#f7f7f7'},listeners:{onchange:(e)=>setOption({color:e.target.value})}}),
-					C('button',{style:{marginLeft:'1em',backgroundColor:defaults.color,color:'#f7f7f7'},listeners:{onclick:()=>setDefault('color')}},['default'])
+				C('div',{style:{display:'grid',gridTemplateColumns:'max-content max-content',gridGap:'1em'}},[
+					C('input',{id:'color',type:'color',value:options?options.color:'#000000',listeners:{onchange:(e)=>setOption({color:e.target.value})}}),
+					C('button',{style:{backgroundColor:defaults.color,color:options.backgroundColor},listeners:{onclick:()=>setDefault('color')}},['default'])
 				]),
 				C('span',{style:{textAlign:'right',alignSelf:'center'}},['Widget Units: ']),
 				C('div',{},[
@@ -312,7 +312,7 @@ function Frame({options,session}) {
 	}
 	function Loading() {
 		return C('div',{id:'framecon'},[
-			C('div',{id:'spinner'},[Spinner()]),
+			C('div',{id:'spinner',style:{height:'100%'}},[Spinner()]),
 			C('p',{id:'error',style:{fontWeight:'bold',textAlign:'center'}},[])
 		]);
 	}
@@ -327,30 +327,32 @@ function Frame({options,session}) {
 						session.searches.unshift(session.current);
 					}
 					sessionStorage.setItem('DSNT',JSON.stringify(session));
-					C.sync();
+					// C.sync();
+					setTimeout(C.sync,3000);
 				}
 				else {
 					error(status);
 				}
 			})
-		}, error,{maximumAge:1000,timeout:8000,enableHighAccuracy:true});
+		}, error,{maximumAge:1000,timeout:20000,enableHighAccuracy:true});
 	}
 	function error(err) {
 		console.warn(err);
 		document.getElementById('spinner').style.display = 'none';
-		document.getElementById('error').innerHTML = `There was an error getting your location.<br>Search for a location below<br><br>\u2193`;
+		document.getElementById('error').innerHTML = `There was an error getting your location<br>${err.message}<br>Search for a location below<br><br>\u2193`;
 	}
 }
 
 function Spinner() {
-	return C('div',{class:'lds-default'},Array.from({length:12},()=>C('div')));
+	return C('img',{src:'download.gif',alt:'LOADING...',style:{maxHeight:'100%'}});
 }
 
 var App = (function() {
 	var data = {state: {tableDisplay:'none',picDisplay:'none',optionsDisplay:'none'}};
 	chrome.storage.sync.get(null,(sync={}) => {
 		data.sync = Object.assign({},defaults(),sync);
-		C.sync();
+		// C.sync();
+		setTimeout(C.sync,3000);
 	});
 	if (window.google) {
 		google.maps.event.addDomListener(window, 'load', () => {
@@ -385,7 +387,7 @@ var App = (function() {
 			InterContainer({display:feed.state.tableDisplay,tables,session:feed.session,local:feed.local}),
 			Tables({reloadiFrame,display:feed.state.tableDisplay,session:feed.session,local:feed.local}),
 			Pics({picDisplay,display:feed.state.picDisplay,photos:feed.session.current.photos}),
-			feed.sync?Options({resetAll,defaults:defaults(),saveOptions,options:feed.sync,display:feed.state.optionsDisplay,optionsDisplay:toggleOptions}):Spinner()
+			feed.sync?Options({resetAll,defaults:defaults(),saveOptions,options:feed.sync,display:feed.state.optionsDisplay,optionsDisplay:toggleOptions}):C('div',{style:{height:'3em'}},[Spinner()])
 		]);
 	}
 	function tables() {
