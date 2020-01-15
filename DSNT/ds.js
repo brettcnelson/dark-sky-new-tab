@@ -327,8 +327,7 @@ function Frame({options,session}) {
 						session.searches.unshift(session.current);
 					}
 					sessionStorage.setItem('DSNT',JSON.stringify(session));
-					// C.sync();
-					setTimeout(C.sync,3000);
+					C.sync();
 				}
 				else {
 					error(status);
@@ -344,15 +343,14 @@ function Frame({options,session}) {
 }
 
 function Spinner() {
-	return C('img',{src:'download.gif',alt:'LOADING...',style:{maxHeight:'100%'}});
+	return C('img',{src:'loading.gif',alt:'LOADING...',style:{maxHeight:'100%'}});
 }
 
 var App = (function() {
 	var data = {state: {tableDisplay:'none',picDisplay:'none',optionsDisplay:'none'}};
 	chrome.storage.sync.get(null,(sync={}) => {
 		data.sync = Object.assign({},defaults(),sync);
-		// C.sync();
-		setTimeout(C.sync,3000);
+		C.sync();
 	});
 	if (window.google) {
 		google.maps.event.addDomListener(window, 'load', () => {
@@ -382,7 +380,7 @@ var App = (function() {
 		data.local = JSON.parse(localStorage.getItem('DSNT'))||[];
 		var feed = deepCopy(data);
 		document.body.style.backgroundColor = feed.sync ? feed.sync.backgroundColor : defaults().backgroundColor;
-		return C('div',{id:'root'},[
+		return C('div',{},[
 			Frame({options:feed.sync,session:feed.session}),
 			InterContainer({display:feed.state.tableDisplay,tables,session:feed.session,local:feed.local}),
 			Tables({reloadiFrame,display:feed.state.tableDisplay,session:feed.session,local:feed.local}),
